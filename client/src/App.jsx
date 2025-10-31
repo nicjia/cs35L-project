@@ -5,6 +5,7 @@ import './App.css';
 //import page components
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Tasks from './pages/Tasks';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           <li>
             <Link to="/profile">Profile</Link>
           </li>
+          <li>
+            <Link to="/tasks">Tasks</Link>
+          </li>
         </ul>
       </nav>
 
@@ -26,6 +30,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/tasks" element={<Tasks />} />
           {/* Add future routes here*/}
         </Routes>
       </main>
