@@ -1,10 +1,11 @@
-import React from 'react';
+import React from "react";
+import { useState } from "react";
 
-function Home() {
+export function HomePage() {
   return (
-    <div>
+    <div className="task-list-container">
       <h1>Home Page</h1>
-      <p>This is the main dashboard. </p>
+      <ul className="task-list"></ul>
     </div>
   );
 }
