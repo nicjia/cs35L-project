@@ -10,20 +10,22 @@ import Tasks from './pages/Tasks';
 function App() {
   return (
     <div className="App">
-      <nav>
-        <ul>
-          {/* navigation links to switch between pages */}
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
-          <li>
-            <Link to="/tasks">Tasks</Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="Navbar">
+        <nav>
+          <ul>
+            {/* navigation links to switch between pages */}
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li>
+              <Link to="/tasks">Tasks</Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
       {/* Defines the "page" that will be swapped in and out */}
       <main>
