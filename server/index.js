@@ -14,4 +14,5 @@ db.sequelize.sync().then(() => {
         console.log('Server is running on http://localhost:3001');
     });
 });
+//now working with no passwrod locally
 
