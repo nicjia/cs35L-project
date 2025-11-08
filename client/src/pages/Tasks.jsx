@@ -1,22 +1,33 @@
-// Tasks.jsx
 import React, { useEffect, useState } from "react";
 
-/** ----- Small, self-contained UI for demo purposes -----
- *  - AddTaskForm: create tasks
- *  - TaskItem:    toggle done, rename, delete
- *  - TaskList:    renders the list
- *  - Tasks:       page wrapper + localStorage persistence (optional)
+/**
+ * A utility function to format the date.
+ * '2025-11-10' -> 'Nov 10'
  */
+function formatDate(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Re-add timezone offset to get local date
+  const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+  return localDate.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
 
 function AddTaskForm({ onAdd }) {
   const [title, setTitle] = useState("");
+  // Add state for the due date
+  const [dueDate, setDueDate] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
     const t = title.trim();
     if (!t) return;
-    onAdd(t);
+    // Pass an object with title and dueDate
+    onAdd({ title: t, dueDate: dueDate || null });
     setTitle("");
+    setDueDate("");
   }
 
   return (
@@ -27,6 +38,14 @@ function AddTaskForm({ onAdd }) {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a task..."
         aria-label="New task title"
+      />
+      {/* New Date Input Field */}
+      <input
+        type="date"
+        className="task-date-input"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+        aria-label="Due date"
       />
       <button className="task-btn" type="submit">
         Add
@@ -39,20 +58,24 @@ function TaskItem({ task, onToggle, onDelete, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [draftData, setDraftData] = useState({
     title: task.title,
-    priority: task.priority || "Normal",
+    priority: task.priority || "Medium", // Default to Medium
+    dueDate: task.dueDate || "",
   });
 
   function handleSave() {
     const trimmedTitle = draftData.title.trim();
     if (!trimmedTitle) return; // don't allow empty titles
 
+    // Check if any fields have changed
     const titleChanged = trimmedTitle !== task.title;
-    const priorityChanged = draftData.priority !== (task.priority || "Normal");
+    const priorityChanged = draftData.priority !== (task.priority || "Medium");
+    const dateChanged = draftData.dueDate !== (task.dueDate || "");
 
-    if (titleChanged || priorityChanged) {
+    if (titleChanged || priorityChanged || dateChanged) {
       onUpdate(task.id, {
         title: trimmedTitle,
         priority: draftData.priority,
+        dueDate: draftData.dueDate || null,
       });
     }
     setEditing(false);
@@ -88,34 +111,57 @@ function TaskItem({ task, onToggle, onDelete, onUpdate }) {
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
             </select>
+            {/* Date editor */}
+            <input
+              type="date"
+              className="task-edit-date"
+              value={draftData.dueDate}
+              onChange={(e) =>
+                setDraftData((prev) => ({ ...prev, dueDate: e.target.value }))
+              }
+            />
           </>
         ) : (
           <>
-            {" "}
             <span
-              className={`priority-flag priority-${task.priority?.toLowerCase()}`}
+              className={`priority-flag priority-${(
+                task.priority || "medium"
+              ).toLowerCase()}`}
             >
-              {task.priority}
+              {task.priority || "Medium"}
             </span>
             <span className={`task-title ${task.done ? "task-done" : ""}`}>
               {task.title}
             </span>
+            {/* Display the due date */}
+            {task.dueDate && (
+              <span className="task-due-date">
+                {formatDate(task.dueDate)}
+              </span>
+            )}
           </>
         )}
       </label>
 
       <div className="task-actions">
         {editing ? (
-          <button className="task-btn" onClick={handleSave}>
+          <button className="task-btn task-btn-save" onClick={handleSave}>
             Save
           </button>
         ) : (
-          <button className="task-btn" onClick={() => setEditing(true)}>
+          <button className="task-btn task-btn-edit" onClick={() => {
+            setDraftData({
+              title: task.title,
+              priority: task.priority || "Medium",
+              dueDate: task.dueDate || "",
+            });
+            setEditing(true);
+          }}>
             Edit
           </button>
         )}
         <button
-          className="task-btn task-danger"
+          className="task-btn task-btn-danger"
           onClick={() => onDelete(task.id)}
         >
           Delete
@@ -145,7 +191,6 @@ function TaskList({ tasks, onToggle, onDelete, onUpdate }) {
 }
 
 export default function Tasks() {
-  // Load/save to localStorage so it survives refresh (nice for demos)
   const [tasks, setTasks] = useState(() => {
     try {
       const raw = localStorage.getItem("tasks");
@@ -159,14 +204,15 @@ export default function Tasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  function addTask(title) {
+  function addTask({ title, dueDate }) { // Receive object
     setTasks((prev) => [
       ...prev,
       {
         id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
         title,
         done: false,
-        priority: "Normal",
+        priority: "Medium", // Default priority
+        dueDate, // Add the due date
       },
     ]);
   }
@@ -199,7 +245,7 @@ export default function Tasks() {
         tasks={tasks}
         onToggle={toggleTask}
         onDelete={deleteTask}
-        onUpdate={updateTask}
+        onUpdate={updateTask} // Use the new update function
       />
     </div>
   );
