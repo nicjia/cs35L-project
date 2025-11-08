@@ -35,13 +35,26 @@ function AddTaskForm({ onAdd }) {
   );
 }
 
-function TaskItem({ task, onToggle, onDelete, onRename }) {
+function TaskItem({ task, onToggle, onDelete, onUpdate }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(task.title);
+  const [draftData, setDraftData] = useState({
+    title: task.title,
+    priority: task.priority || "Normal",
+  });
 
   function handleSave() {
-    const t = draft.trim();
-    if (t && t !== task.title) onRename(task.id, t);
+    const trimmedTitle = draftData.title.trim();
+    if (!trimmedTitle) return; // don't allow empty titles
+
+    const titleChanged = trimmedTitle !== task.title;
+    const priorityChanged = draftData.priority !== (task.priority || "Normal");
+
+    if (titleChanged || priorityChanged) {
+      onUpdate(task.id, {
+        title: trimmedTitle,
+        priority: draftData.priority,
+      });
+    }
     setEditing(false);
   }
 
@@ -54,17 +67,40 @@ function TaskItem({ task, onToggle, onDelete, onRename }) {
           onChange={() => onToggle(task.id)}
         />
         {editing ? (
-          <input
-            className="task-edit-input"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSave()}
-            autoFocus
-          />
+          <>
+            <input
+              className="task-edit-input"
+              value={draftData.title}
+              onChange={(e) =>
+                setDraftData((prev) => ({ ...prev, title: e.target.value }))
+              }
+              onKeyDown={(e) => e.key === "Enter" && handleSave()}
+              autoFocus
+            />
+            <select
+              className="task-edit-priority"
+              value={draftData.priority}
+              onChange={(e) =>
+                setDraftData((prev) => ({ ...prev, priority: e.target.value }))
+              }
+            >
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </>
         ) : (
-          <span className={`task-title ${task.done ? "task-done" : ""}`}>
-            {task.title}
-          </span>
+          <>
+            {" "}
+            <span
+              className={`priority-flag priority-${task.priority?.toLowerCase()}`}
+            >
+              {task.priority}
+            </span>
+            <span className={`task-title ${task.done ? "task-done" : ""}`}>
+              {task.title}
+            </span>
+          </>
         )}
       </label>
 
@@ -78,7 +114,10 @@ function TaskItem({ task, onToggle, onDelete, onRename }) {
             Edit
           </button>
         )}
-        <button className="task-btn task-danger" onClick={() => onDelete(task.id)}>
+        <button
+          className="task-btn task-danger"
+          onClick={() => onDelete(task.id)}
+        >
           Delete
         </button>
       </div>
@@ -86,7 +125,7 @@ function TaskItem({ task, onToggle, onDelete, onRename }) {
   );
 }
 
-function TaskList({ tasks, onToggle, onDelete, onRename }) {
+function TaskList({ tasks, onToggle, onDelete, onUpdate }) {
   if (!tasks.length) {
     return <p className="task-empty">No tasks yet. Add one above!</p>;
   }
@@ -98,7 +137,7 @@ function TaskList({ tasks, onToggle, onDelete, onRename }) {
           task={t}
           onToggle={onToggle}
           onDelete={onDelete}
-          onRename={onRename}
+          onUpdate={onUpdate}
         />
       ))}
     </ul>
@@ -123,7 +162,12 @@ export default function Tasks() {
   function addTask(title) {
     setTasks((prev) => [
       ...prev,
-      { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()), title, done: false },
+      {
+        id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
+        title,
+        done: false,
+        priority: "Normal",
+      },
     ]);
   }
 
@@ -137,8 +181,14 @@ export default function Tasks() {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 
-  function renameTask(id, title) {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, title } : t)));
+  function updateTask(id, updates) {
+    if (!updates || typeof updates !== "object") {
+      console.error("Invalid updates object:", updates);
+      return;
+    }
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
+    );
   }
 
   return (
@@ -149,7 +199,7 @@ export default function Tasks() {
         tasks={tasks}
         onToggle={toggleTask}
         onDelete={deleteTask}
-        onRename={renameTask}
+        onUpdate={updateTask}
       />
     </div>
   );

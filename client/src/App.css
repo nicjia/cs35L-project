@@ -42,26 +42,87 @@
 }
 
 /* --- Tasks page styles --- */
-.page { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
-.task-form { display: flex; gap: .5rem; margin: 1rem 0; }
-.task-input, .task-edit-input { flex: 1; padding: .5rem .75rem; border: 1px solid #ddd; border-radius: .5rem; }
-.task-btn { 
-  padding: .45rem .8rem; 
-  border: 1px solid #646cff; 
-  border-radius: .5rem; 
-  background: #646cff; 
-  color: white;
-  cursor: pointer; 
+.page {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
-.task-btn:hover { filter: brightness(0.98); }
-.task-danger { border-color: #dc3545; background: #dc3545; color: white; }
-.task-list { list-style: none; padding: 0; margin: .5rem 0; display: grid; gap: .5rem; }
-.task-item { display: flex; align-items: center; justify-content: space-between; padding: .6rem .8rem; border: 1px solid #eee; border-radius: .75rem; }
-.task-left { display: flex; align-items: center; gap: .6rem; }
-.task-title { font-size: 0.98rem; }
-.task-done { text-decoration: line-through; color: #888; }
-.task-actions { display: flex; gap: .4rem; }
-.task-empty { color: #666; margin-top: .75rem; }
+.task-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.task-input,
+.task-edit-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+.task-btn {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #646cff;
+  border-radius: 0.5rem;
+  background: #646cff;
+  color: white;
+  cursor: pointer;
+}
+.task-btn:hover {
+  filter: brightness(0.98);
+}
+.task-danger {
+  border-color: #dc3545;
+  background: #dc3545;
+  color: white;
+}
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #eee;
+  border-radius: 0.75rem;
+}
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.task-title {
+  font-size: 0.98rem;
+}
+.task-done {
+  text-decoration: line-through;
+  color: #888;
+}
+.task-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+.task-empty {
+  color: #666;
+  margin-top: 0.75rem;
+}
+
+.priority-high {
+  color: red;
+}
+.priority-medium {
+  color: orange;
+}
+.priority-low {
+  color: green;
+}
+.priority-normal {
+  color: gray;
+}
 
 /* --- Navigation + Main Page --- */
 .Navbar {
@@ -84,11 +145,11 @@
 
 main {
   flex: 1;
-  margin-left: 220px; 
+  margin-left: 220px;
   padding: 2rem;
   box-sizing: border-box;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: flex-start;
 }
 
@@ -103,7 +164,7 @@ main > * {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .Navbar nav li {
@@ -113,24 +174,26 @@ main > * {
 .Navbar nav a {
   color: #fff;
   text-decoration: none;
-  padding: .5rem .6rem;
-  border-radius: .4rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.4rem;
   display: block;
   font-weight: 600;
 }
 
 .Navbar nav a:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Responsivenss for small screens */
 @media (max-width: 720px) {
-  .App { flex-direction: column; }
+  .App {
+    flex-direction: column;
+  }
   .Navbar {
     position: relative;
     height: auto;
     width: 100%;
-    padding: .75rem 1rem;
+    padding: 0.75rem 1rem;
   }
   main {
     margin-left: 0;
