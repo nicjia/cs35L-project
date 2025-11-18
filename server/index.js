@@ -65,8 +65,6 @@ app.delete('/api/tasks/:id', (req, res) => {
     });
 });
 
-const taskRouter = require('./routes/Tasks');
-app.use("/tasks", taskRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
