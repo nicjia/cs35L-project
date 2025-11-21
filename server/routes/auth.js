@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { User } = require("../models");
+const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res) => {
   try {
@@ -32,6 +33,41 @@ router.post("/register", async (req, res) => {
     }
 
     console.error("Error during registration:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.scope("withPassword").findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await require("bcryptjs").compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, username: user.username, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
