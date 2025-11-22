@@ -25,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY, 
       allowNull: true,
     },
+
+    isPublic: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false //or true depending on preference
+    }
   });
 
   return Task;
