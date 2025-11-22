@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTasks } from '../contexts/TaskContext'; // Import the hook
 import { TaskList } from '../features/tasks/TaskList'; // Re-use the TaskList
+import calculateUrgency from '../utils/calculateUrgency';
 
 // --- Helper Functions for Sorting and Grouping ---
 const priorityMap = { High: 3, Medium: 2, Low: 1 };
@@ -38,9 +39,10 @@ function Home() {
       if (dateA < dateB) return -1;
       if (dateA > dateB) return 1;
     }
-    const priorityA = priorityMap[a.priority] || 0;
-    const priorityB = priorityMap[b.priority] || 0;
-    return priorityB - priorityA;
+    // Use calculated urgency instead of stored priority
+    const urgencyA = calculateUrgency(a);
+    const urgencyB = calculateUrgency(b);
+    return urgencyB - urgencyA;
   });
 
   // 3. Group the tasks

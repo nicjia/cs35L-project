@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTasks } from '../../contexts/TaskContext'; 
-import formatDate from '../../utils/formatDate'; 
+import formatDate from '../../utils/formatDate';
+import calculateUrgency, { priorityLevelToString } from '../../utils/calculateUrgency'; 
 
 export function TaskItem({ task }) {
   // Get functions from the context
@@ -12,6 +13,10 @@ export function TaskItem({ task }) {
     priority: task.priority || 'Medium',
     dueDate: task.dueDate || '',
   });
+
+  // Calculate the effective urgency priority for display
+  const urgencyLevel = calculateUrgency(task);
+  const displayPriority = priorityLevelToString(urgencyLevel);
 
   function handleSave() {
     const trimmedTitle = draftData.title.trim();
@@ -54,6 +59,7 @@ export function TaskItem({ task }) {
                 setDraftData((prev) => ({ ...prev, priority: e.target.value }))
               }
             >
+              <option value="Urgent">Urgent</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
               <option value="Low">Low</option>
@@ -70,11 +76,9 @@ export function TaskItem({ task }) {
         ) : (
           <>
             <span
-              className={`priority-flag priority-${(
-                task.priority || 'medium'
-              ).toLowerCase()}`}
+              className={`priority-flag priority-${displayPriority.toLowerCase()}`}
             >
-              {task.priority || 'Medium'}
+              {displayPriority}
             </span>
             <span className={`task-title ${task.done ? 'task-done' : ''}`}>
               {task.title}
