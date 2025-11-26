@@ -9,6 +9,7 @@ import { TaskProvider } from "./contexts/TaskContext.jsx";
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Tasks from './pages/Tasks';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
         <div className="Navbar">
           <nav>
             <ul>
-              <li><Link to="/">Home</Link></li>
+              <li><Link to="/">Login</Link></li>
+              <li><Link to="/home">Home</Link></li>
               <li><Link to="/profile">Profile</Link></li>
               <li><Link to="/tasks">Tasks</Link></li>
             </ul>
@@ -27,7 +29,9 @@ function App() {
 
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+          
+            <Route path="/" element={<Login />} />
+            <Route path="/main" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/tasks" element={<Tasks />} />
           </Routes>
