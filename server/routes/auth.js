@@ -23,9 +23,26 @@ router.post("/register", async (req, res) => {
       email,
       password,
     });
-    res
-      .status(201)
-      .json({ message: "User registered successfully", userId: newUser.id });
+    //Generate JWT token for immediate login
+    const token = jwt.sign(
+      {
+        userId: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: newUser.id,
+        firstName: newUser.firstName,
+        username: newUser.username,
+      },
+    });
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       const messages = error.errors.map((err) => err.message);

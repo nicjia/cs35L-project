@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -33,30 +33,42 @@ export default function Login({ onLoginSuccess }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div>
+      <h2>Login</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+      >
+        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          Email:
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
 
-      <label>
-        Email:
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </label>
+        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          Password:
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
 
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-
-      <button type="submit">Login</button>
-    </form>
+        <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
+          Login
+        </button>
+      </form>
+      <p style={{ marginTop: "20px" }}>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
+    </div>
   );
 }

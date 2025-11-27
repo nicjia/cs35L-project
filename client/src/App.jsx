@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Tasks from "./pages/Tasks";
 import Login from "./pages/Login";
+import Register from "./pages/Register.jsx";
 
 const RequireAuth = () => {
   const token = localStorage.getItem("token");
@@ -61,9 +62,10 @@ function App() {
         <Routes>
           //Public login route
           <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           //protected auth check route
           <Route element={<RequireAuth />}>
-            <Route path="/main" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/tasks" element={<Tasks />} />
           </Route>
