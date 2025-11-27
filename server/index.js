@@ -1,6 +1,7 @@
 // server/index.js
 const express = require("express");
 const app = express();
+const auth = require("./middleware/auth");
 app.use(express.json());
 
 const db = require("./models");
@@ -10,7 +11,7 @@ const db = require("./models");
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
-app.get("/api/tasks", (req, res) => {
+app.get("/api/tasks", auth, (req, res) => {
   db.Task.findAll({ order: [["createdAt", "ASC"]] })
     .then((tasks) => {
       res.json(tasks);
@@ -21,7 +22,7 @@ app.get("/api/tasks", (req, res) => {
     });
 });
 
-app.post("/api/tasks", (req, res) => {
+app.post("/api/tasks", auth, (req, res) => {
   db.Task.create(req.body)
     .then((newTask) => {
       res.status(201).json(newTask);
@@ -32,7 +33,7 @@ app.post("/api/tasks", (req, res) => {
     });
 });
 
-app.put("/api/tasks/:id", (req, res) => {
+app.put("/api/tasks/:id", auth, (req, res) => {
   const taskId = req.params.id;
   const updates = req.body;
 
@@ -52,7 +53,7 @@ app.put("/api/tasks/:id", (req, res) => {
     });
 });
 
-app.delete("/api/tasks/:id", (req, res) => {
+app.delete("/api/tasks/:id", auth, (req, res) => {
   const taskId = req.params.id;
 
   db.Task.destroy({ where: { id: taskId } })
