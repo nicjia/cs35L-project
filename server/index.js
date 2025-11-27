@@ -3,8 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const auth = require("./middleware/auth");
-app.use(express.json());
+
 app.use(cors());
+app.use(express.json());
 
 const db = require("./models");
 
@@ -14,7 +15,10 @@ const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
 app.get("/api/tasks", auth, (req, res) => {
-  db.Task.findAll({ order: [["createdAt", "ASC"]] })
+  db.Task.findAll({
+    where: { UserId: req.user.userId },
+    order: [["createdAt", "ASC"]],
+  })
     .then((tasks) => {
       res.json(tasks);
     })
@@ -25,12 +29,24 @@ app.get("/api/tasks", auth, (req, res) => {
 });
 
 app.post("/api/tasks", auth, (req, res) => {
-  db.Task.create(req.body)
+  console.log("--------------------------------------");
+  console.log("Incoming POST request to /api/tasks");
+  console.log("Request Body:", req.body);
+  console.log("Decoded User from Token:", req.user);
+
+  //Create a task with association with a User ID
+  const taskData = {
+    ...req.body,
+    UserId: req.user.userId,
+  };
+
+  db.Task.create(taskData)
     .then((newTask) => {
+      console.log("SUCCESS: Task created with ID:", newTask.id);
       res.status(201).json(newTask);
     })
     .catch((err) => {
-      console.error(err);
+      console.error("SEQUELIZE ERROR:", err);
       res.status(500).json({ error: "Failed to create task" });
     });
 });
@@ -39,7 +55,12 @@ app.put("/api/tasks/:id", auth, (req, res) => {
   const taskId = req.params.id;
   const updates = req.body;
 
-  db.Task.update(updates, { where: { id: taskId } })
+  db.Task.update(updates, {
+    where: {
+      id: taskId,
+      UserId: req.user.userId,
+    },
+  })
     .then(([rowsAffected]) => {
       if (rowsAffected === 0) {
         return res.status(404).json({ error: "Task not found" });
@@ -58,7 +79,12 @@ app.put("/api/tasks/:id", auth, (req, res) => {
 app.delete("/api/tasks/:id", auth, (req, res) => {
   const taskId = req.params.id;
 
-  db.Task.destroy({ where: { id: taskId } })
+  db.Task.destroy({
+    where: {
+      id: taskId,
+      UserId: req.user.userId,
+    },
+  })
     .then((rowsAffected) => {
       if (rowsAffected === 0) {
         return res.status(404).json({ error: "Task not found" });

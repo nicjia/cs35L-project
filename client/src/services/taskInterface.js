@@ -7,7 +7,7 @@ const taskInterface = {
   },
 
   async addTask(taskData) {
-    const response = await api.post("/tasks");
+    const response = await api.post("/tasks", taskData);
     return response.data;
   },
 

@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
     const tokenString = header_token.split(" ")[1];
     const decoded = jwt.verify(tokenString, process.env.JWT_SECRET);
 
-    req.user = decoded.user;
+    req.user = decoded;
     next();
   } catch (error) {
     res.status(401).json({ message: "Token not valid, authorization denied" });
