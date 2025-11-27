@@ -1,58 +1,74 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { useState } from "react";
+import api from "../services/api";
+import { useNavigate, Link } from "react-router-dom";
 
+export default function Login({ onLoginSuccess }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
+  const navigate = useNavigate();
 
-export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
 
-    const handleSubmit  =(event) => {
-        event.preventDefault();
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
+      //If successful: save the token
+      localStorage.setItem("token", response.data.token);
+      navigate("/tasks");
+    } catch (err) {
+      console.error("Login failed", err);
+      if (err.response && err.response.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+    }
+  };
 
-        console.log("Logging in ...");
-    };
+  return (
+    <div>
+      <h2>Login</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+      >
+        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          Email:
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
 
-    return (
-        <div className="login-container">
-          <h2 className="login-title">Welcome Back</h2>
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="form-group">
-              <label className="form-label">Username:</label>
-              <input
-                className="form-input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
-                required
-              />
-            </div>
-    
-            <div className="form-group">
-              <label className="form-label">Password:</label>
-              <input
-                className="form-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
-            </div>
+        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          Password:
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
 
-            <div className="signup-section">
-                <p>Don't have an account? <Link to="/signup" className="signup-link">Sign Up</Link></p>
-            </div>
-    
-            <button type="submit" className="login-button">
-              Login
-            </button>
-          </form>
-        </div>
-      );
-
-
+        <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
+          Login
+        </button>
+      </form>
+      <p style={{ marginTop: "20px" }}>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
+    </div>
+  );
 }
-

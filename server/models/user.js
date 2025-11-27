@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [8], //,
+          len: [8, 100], //,
         }, // Implement and test later: is: Regex
       },
     },
@@ -52,6 +52,13 @@ module.exports = (sequelize, DataTypes) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
   });
+
+  User.associate = (models) => {
+    User.hasMany(models.Task, {
+      foreignKey: "UserId",
+      onDelete: "CASCADE",
+    });
+  };
 
   return User;
 };
