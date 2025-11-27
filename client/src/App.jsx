@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 
 const RequireAuth = () => {
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
   if (!token) return <Navigate to="/" replace />;
 
   const handleLogout = () => {
