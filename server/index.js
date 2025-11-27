@@ -1,8 +1,10 @@
 // server/index.js
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const auth = require("./middleware/auth");
 app.use(express.json());
+app.use(cors());
 
 const db = require("./models");
 

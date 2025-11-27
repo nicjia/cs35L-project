@@ -53,5 +53,12 @@ module.exports = (sequelize, DataTypes) => {
     user.password = await bcrypt.hash(user.password, salt);
   });
 
+  User.associate = (models) => {
+    User.hasMany(modles.Task, {
+      foreignKey: "userId",
+      onDelete: "CASCADE",
+    });
+  };
+
   return User;
 };

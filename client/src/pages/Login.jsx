@@ -1,47 +1,62 @@
-import React from 'react';
-import { useState } from 'react';
+import React from "react";
+import { useState } from "react";
+import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
+export default function Login({ onLoginSuccess }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
+  const navigate = useNavigate();
 
-export default function Login() {
-    const [username, setUsernmame] = useState('');
-    const [password, setPassword] = useState('');
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
 
-    const handleSubmit  =(event) => {
-        event.preventDefault();
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
+      //If successful: save the token
+      localStorage.setItem("token", response.data.token);
+      navigate("/tasks");
+    } catch (err) {
+      console.error("Login failed", err);
+      if (err.response && err.response.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+    }
+  };
 
-        console.log("Logging in");
-    };
+  return (
+    <form onSubmit={handleSubmit}>
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-    return(
-        <form onSubmit={handleSubmit}>
-            <label>
+      <label>
+        Email:
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </label>
 
-                Username;
-                <input 
+      <label>
+        Password:
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </label>
 
-                type="text" value={username} onChange={(e) => setUsername(e.target.value)}
-                required
-                />
-
-            </label>
-
-            <label>
-
-                Password;
-                <input 
-
-                type="text" value={password} onChange={(e) => setPassword(e.target.value)}
-                
-                />
-
-            </label>
-
-            <button type="submit">Login</button>
-
-
-        </form>
-    );
-
+      <button type="submit">Login</button>
+    </form>
+  );
 }
-
