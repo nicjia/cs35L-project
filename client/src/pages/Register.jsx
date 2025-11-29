@@ -88,6 +88,7 @@ export default function Register() {
         />
         <input
           name="password"
+          type="password"
           placeholder="Password"
           onChange={handleChange}
           required
