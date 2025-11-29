@@ -79,11 +79,16 @@ export function TaskItem({ task }) {
             <span className={`task-title ${task.done ? 'task-done' : ''}`}>
               {task.title}
             </span>
+
+            <span className={`task-visibility-badge ${task.isPublic ? 'public' : 'private'}`}>
+            {task.isPublic ? '🔓 Public' : '🔒 Private'}
+            </span>
             {task.dueDate && (
               <span className="task-due-date">
                 {formatDate(task.dueDate)}
               </span>
             )}
+            
           </>
         )}
       </label>
