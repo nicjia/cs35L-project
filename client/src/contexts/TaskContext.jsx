@@ -24,13 +24,14 @@ export function TaskProvider({ children }) {
   }, []);
 
   // 2. (Create) Add a new task
-  async function addTask({ title, dueDate }) {
+  async function addTask({ title, dueDate, isPublic }) {
     try {
       const newTaskData = {
         title,
         dueDate: dueDate || null,
         priority: "Normal",
         done: false,
+        isPublic: isPublic || false,
       };
       const newTask = await taskInterface.addTask(newTaskData);
       setTasks((prev) => [...prev, newTask]);

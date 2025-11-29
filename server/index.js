@@ -97,8 +97,14 @@ app.delete("/api/tasks/:id", auth, (req, res) => {
     });
 });
 
-db.sequelize.sync().then(() => {
-  app.listen(3001, () => {
-    console.log("Server is running on http://localhost:3001");
-  });
+// db.sequelize.sync().then(() => {
+//   app.listen(3001, () => {
+//     console.log("Server is running on http://localhost:3001");
+//   });
+// });
+
+// Start server - database sync happens in models/index.js
+app.listen(3001, () => {
+  console.log("Server is running on http://localhost:3001");
+  console.log("Database:", process.env.DB_NAME);
 });
