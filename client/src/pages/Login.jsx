@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import "./Login.css";
 
 export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -33,41 +34,49 @@ export default function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+    <div className="auth-container">
+      <h2 className="auth-header">Login</h2>
+      {error && (
+        <p className="auth-error-message">{error}</p>
+      )}
       <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "15px" }}
+        onSubmit={handleSubmit} 
+        className="auth-form"
       >
-        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-          Email:
+        <div className="auth-form-group">
+          <label className="auth-form-label">Email:</label>
           <input
+            className="auth-form-input"
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
+        </div>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-          Password:
+
+      
+        
+        <div className="auth-form-group">
+          <label className="auth-form-label">Password:</label>
           <input
+            className="auth-form-input"
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
+        </div>
 
-        <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
+        <button type="submit" className="auth-submit-button">
           Login
         </button>
       </form>
-      <p style={{ marginTop: "20px" }}>
-        Don't have an account? <Link to="/register">Register here</Link>
+      
+      <p className="auth-footer-text">
+        Don't have an account? <Link to="/register" className="auth-link">Register here</Link>
       </p>
     </div>
   );
