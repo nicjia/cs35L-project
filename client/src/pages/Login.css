@@ -1,0 +1,125 @@
+/*AUTH CONTAINER-main wrapper styles*/
+
+.auth-container{
+    max-width: 400 px;
+    margin: 50px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/*Header section*/
+
+.auth-header{
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    /*header properties*/
+}
+
+/*Error messaging*/
+
+.auth-error-message{
+    color: red;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #ffe6ef;
+    border: 1px solid #ffcccf;
+    border-radius: 4px;
+    font-size: 14px;
+    /*error message properties*/
+}
+
+/*Form structure*/
+
+.auth-form{
+    /*form properties*/
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form-group {
+    /* Label wrapper styles */
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.auth-form-label{
+    font-weight: 500;
+    /*label text styles*/
+    color: #555;
+    font-size: 14px;
+}
+
+.auth-form-input{
+    /*input field styles*/
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+.auth-form-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+  }
+  
+  .auth-form-input::placeholder {
+    color: #999;
+  }
+/*Buttons*/
+
+.auth-submit-button{
+    /*submit button styles*/
+    padding: 10px;
+    cursor: pointer;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.auth-submit-button:hover{
+    background-color: #357ab8;
+}
+
+.auth-submit-button:active {
+    background-color: #2868a8;
+  }
+  
+  .auth-submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+/*Footer section*/
+
+.auth-footer-text {
+    margin-top: 20px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .auth-link {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .auth-link:hover {
+    color: #357abd;
+    text-decoration: underline;
+  }
+
