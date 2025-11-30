@@ -62,6 +62,12 @@ export default function Login({ onLoginSuccess }) {
           />
         </label>
 
+        <div style={{ textAlign: "right", marginTop: "5px" }}>
+          <Link to="/forgot-password" style={{ fontSize: "14px" }}>
+            Forgot Password?
+          </Link>
+        </div>
+
         <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
           Login
         </button>
