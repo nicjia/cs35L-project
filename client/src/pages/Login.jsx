@@ -3,6 +3,7 @@ import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
+import { AUTH_ERRORS, AUTH_ROUTES, HTTP_STATUS } from '../constants/authConstants';
 
 export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -23,14 +24,21 @@ export default function Login({ onLoginSuccess }) {
       //If successful: save the token
       localStorage.setItem("token", response.data.token);
       navigate("/tasks");
-    } catch (err) {
+    }
+    
+    catch (err) {
       console.error("Login failed", err);
-      if (err.response && err.response.status === 401) {
-        setError("Invalid email or password");
-      } else {
-        setError("An error occurred. Please try again later.");
+      if (err.response && err.response.status === HTTP_STATUS.UNAUTHORIZED) 
+      {
+        setError(AUTH_ERRORS.UNAUTHORIZED);  
+      }
+     else 
+     {
+        setError(AUTH_ERRORS.SERVER_ERROR); 
       }
     }
+
+    navigate(AUTH_ROUTES.TASKS);
   };
 
   return (
