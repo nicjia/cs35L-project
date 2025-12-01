@@ -3,7 +3,7 @@ import { useState } from "react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
-import { AUTH_ERRORS, AUTH_ROUTES, HTTP_STATUS } from '../constants/authConstants';
+import { GENERIC_ERROR_MESSAGE, AUTH_ROUTES, API_ENDPOINTS, HTTP_STATUS } from '../constants/authConstants';
 
 export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -17,28 +17,21 @@ export default function Login({ onLoginSuccess }) {
     setError("");
 
     try {
-      const response = await api.post("/auth/login", {
+      const response = await api.post(API_ENDPOINTS.LOGIN, {
         email,
         password,
       });
       //If successful: save the token
       localStorage.setItem("token", response.data.token);
-      navigate("/tasks");
-    }
-    
-    catch (err) {
+      navigate(AUTH_ROUTES.TASKS);
+    } catch (err) {
       console.error("Login failed", err);
-      if (err.response && err.response.status === HTTP_STATUS.UNAUTHORIZED) 
-      {
-        setError(AUTH_ERRORS.UNAUTHORIZED);  
-      }
-     else 
-     {
-        setError(AUTH_ERRORS.SERVER_ERROR); 
+      if (err.response && err.response.status === HTTP_STATUS.UNAUTHORIZED) {
+        setError(GENERIC_ERROR_MESSAGE.UNAUTHORIZED);
+      } else {
+        setError(GENERIC_ERROR_MESSAGE.SERVER_ERROR);
       }
     }
-
-    navigate(AUTH_ROUTES.TASKS);
   };
 
   return (
@@ -63,9 +56,6 @@ export default function Login({ onLoginSuccess }) {
           />
         </div>
 
-
-      
-        
         <div className="auth-form-group">
           <label className="auth-form-label">Password:</label>
           <input
@@ -84,7 +74,7 @@ export default function Login({ onLoginSuccess }) {
       </form>
       
       <p className="auth-footer-text">
-        Don't have an account? <Link to="/register" className="auth-link">Register here</Link>
+        Don't have an account? <Link to={AUTH_ROUTES.REGISTER} className="auth-link">Register here</Link>
       </p>
     </div>
   );

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import "./Login.css";
+import {GENERIC_ERROR_MESSAGE, AUTH_ROUTES, API_ENDPOINTS, HTTP_STATUS } from '../constants/authConstants';;
+
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -25,13 +28,13 @@ export default function Register() {
     setError("");
 
     try {
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post(API_ENDPOINTS.REGISTER, formData);
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        navigate("/tasks");
+        navigate(AUTH_ROUTES.TASKS);
       } else {
-        navigate("/");
+        navigate(AUTH_ROUTES.LOGIN);
       }
     } catch (err) {
       console.error("Registration failed", err);
@@ -43,62 +46,81 @@ export default function Register() {
         } else if (err.response.data.error) {
           setError(err.response.data.error);
         } else {
-          setError("Registration error");
+          setError(GENERIC_ERROR_MESSAGE.SERVER_ERROR);
         }
       } else {
-        setError("An error occurred. Please try again later.");
+        setError(GENERIC_ERROR_MESSAGE.NETWORK_ERROR);
       }
     }
   };
 
   return (
-    <div
-      className="Register"
-      style={{ maxWidth: "300px", margin: "50px auto" }}
-    >
-      <h2>Create Account</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <input
-          name="firstName"
-          placeholder="First Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="lastName"
-          placeholder="Last Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" style={{ padding: "10px", cursor: "pointer" }}>
+    <div className="auth-container">
+      <h2 className="auth-header">Create Account</h2>
+      {error && <p className="auth-error-message">{error}</p>}
+      
+      <form onSubmit={handleSubmit} className="auth-form">
+
+
+      <div className="auth-form-group">
+          <input
+            className="auth-form-input"
+            name="firstName"
+            placeholder="First Name"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="auth-form-group">
+          <input
+            className="auth-form-input"
+            name="lastName"
+            placeholder="Last Name"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="auth-form-group">
+          <input
+            className="auth-form-input"
+            name="username"
+            placeholder="Username"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="auth-form-group">
+          <input
+            className="auth-form-input"
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="auth-form-group">
+          <input
+            className="auth-form-input"
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit" className="auth-submit-button">
           Register
         </button>
       </form>
 
-      <p style={{ marginTop: "20px" }}>
-        Already have an account? <Link to="/">Login here</Link>
+      <p className="auth-footer-text">
+        Already have an account? <Link to={AUTH_ROUTES.LOGIN} className="auth-link">Login here</Link>
       </p>
     </div>
   );
