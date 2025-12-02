@@ -37,6 +37,8 @@ npm install
 
 npm run dev
 
+Note: install nodemailer for Forget Password option
+
 
 
 
