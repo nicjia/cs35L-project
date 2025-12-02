@@ -103,10 +103,15 @@ export default function Login() {
             disabled={isLoading}
             required
           />
+          <div style={{ textAlign: 'right', marginTop: '4px' }}>
+            <Link to={AUTH_ROUTES.FORGOT_PASSWORD} className="auth-link" style={{ fontSize: '13px' }}>
+              Forgot password?
+            </Link>
+          </div>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="auth-submit-button"
           disabled={isLoading}
         >

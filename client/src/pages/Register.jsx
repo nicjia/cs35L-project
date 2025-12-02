@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import "./Login.css";
-import {GENERIC_ERROR_MESSAGE, AUTH_ROUTES, API_ENDPOINTS, HTTP_STATUS } from '../constants/authConstants';;
+import {GENERIC_ERROR_MESSAGE, AUTH_ROUTES, API_ENDPOINTS } from '../constants/authConstants';;
 
 /*Register page component Handles user registration and navigation to appropriate page*/
 export default function Register() {

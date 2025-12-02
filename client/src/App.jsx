@@ -17,6 +17,8 @@ import Profile from "./pages/Profile";
 import Tasks from "./pages/Tasks";
 import Login from "./pages/Login";
 import Register from "./pages/Register.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 // Sidebar Component
 const Sidebar = ({ onLogout }) => {
@@ -197,6 +199,8 @@ function App() {
         {/* Public routes (no Sidebar / full-bleed) */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Protected routes rendered inside RequireAuth which contains the Sidebar + main */}
         <Route element={<RequireAuth />}>

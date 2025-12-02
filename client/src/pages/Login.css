@@ -123,6 +123,19 @@
   font-weight: 500;
 }
 
+/* Success messaging */
+.auth-success-message {
+  color: #059669;
+  text-align: center;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: var(--radius-md, 10px);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* Form structure */
 .auth-form {
   display: flex;

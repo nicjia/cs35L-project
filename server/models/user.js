@@ -1,3 +1,5 @@
+
+
 const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize, DataTypes) => {
@@ -32,11 +34,19 @@ module.exports = (sequelize, DataTypes) => {
           len: [8, 100], //,
         }, // Implement and test later: is: Regex
       },
+      resetToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      resetTokenExpiry: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       //for security: hide password field from queries
       defaultScope: {
-        attributes: { exclude: ["password"] },
+        attributes: { exclude: ["password", "resetToken", "resetTokenExpiry"] },
       },
       scopes: {
         //password only when explicitly requested
@@ -47,10 +57,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  // Hash password before saving
-  User.beforeCreate(async (user, options) => {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+  // Hash password before saving (for new users and password updates)
+  User.beforeSave(async (user) => {
+    // Only hash if password was changed
+    if (user.changed('password')) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
   });
 
   User.associate = (models) => {
