@@ -23,10 +23,20 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Only redirect on 401 if user was previously authenticated (had a token)
+    // This prevents redirecting during login/register failures
     if (error.response && error.response.status === 401) {
-      //Token expired or invalid, so user should be logged out
-      localStorage.removeItem("token");
-      window.location.href = "/";
+      const token = localStorage.getItem("token");
+      const isAuthEndpoint = error.config?.url?.includes('/auth/login') ||
+                             error.config?.url?.includes('/auth/register') ||
+                             error.config?.url?.includes('/auth/forgot-password');
+
+      // Only auto-logout if user had a token and it's not a login/register attempt
+      if (token && !isAuthEndpoint) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/";
+      }
     }
     return Promise.reject(error);
   }
