@@ -32,7 +32,14 @@ export default function Register() {
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        navigate(AUTH_ROUTES.TASKS);
+        // Store user info for the profile display
+        localStorage.setItem("user", JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          username: formData.username,
+          email: formData.email
+        }));
+        navigate("/home");
       } else {
         navigate(AUTH_ROUTES.LOGIN);
       }
@@ -56,72 +63,91 @@ export default function Register() {
 
   return (
     <div className="auth-container">
-      <h2 className="auth-header">Create Account</h2>
-      {error && <p className="auth-error-message">{error}</p>}
-      
-      <form onSubmit={handleSubmit} className="auth-form">
-
-
-      <div className="auth-form-group">
-          <input
-            className="auth-form-input"
-            name="firstName"
-            placeholder="First Name"
-            onChange={handleChange}
-            required
-          />
+      <div className="auth-card">
+        <div className="auth-brand">
+          <div className="auth-brand-icon">🎯</div>
+          <span className="auth-brand-name">Slate</span>
         </div>
 
-        <div className="auth-form-group">
-          <input
-            className="auth-form-input"
-            name="lastName"
-            placeholder="Last Name"
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <h2 className="auth-header">Create Account</h2>
+        <p className="auth-subheader">Get started with your free account</p>
+        
+        {error && <p className="auth-error-message">{error}</p>}
+        
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div className="auth-form-group">
+              <label className="auth-form-label" htmlFor="firstName">First Name</label>
+              <input
+                id="firstName"
+                className="auth-form-input"
+                name="firstName"
+                placeholder="John"
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <div className="auth-form-group">
-          <input
-            className="auth-form-input"
-            name="username"
-            placeholder="Username"
-            onChange={handleChange}
-            required
-          />
-        </div>
+            <div className="auth-form-group">
+              <label className="auth-form-label" htmlFor="lastName">Last Name</label>
+              <input
+                id="lastName"
+                className="auth-form-input"
+                name="lastName"
+                placeholder="Doe"
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-        <div className="auth-form-group">
-          <input
-            className="auth-form-input"
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="auth-form-group">
+            <label className="auth-form-label" htmlFor="username">Username</label>
+            <input
+              id="username"
+              className="auth-form-input"
+              name="username"
+              placeholder="johndoe"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="auth-form-group">
-          <input
-            className="auth-form-input"
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="auth-form-group">
+            <label className="auth-form-label" htmlFor="email">Email</label>
+            <input
+              id="email"
+              className="auth-form-input"
+              type="email"
+              name="email"
+              placeholder="john@example.com"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button type="submit" className="auth-submit-button">
-          Register
-        </button>
-      </form>
+          <div className="auth-form-group">
+            <label className="auth-form-label" htmlFor="password">Password</label>
+            <input
+              id="password"
+              className="auth-form-input"
+              type="password"
+              name="password"
+              placeholder="Create a strong password"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-      <p className="auth-footer-text">
-        Already have an account? <Link to={AUTH_ROUTES.LOGIN} className="auth-link">Login here</Link>
-      </p>
+          <button type="submit" className="auth-submit-button">
+            Create Account
+          </button>
+        </form>
+
+        <p className="auth-footer-text">
+          Already have an account? <Link to={AUTH_ROUTES.LOGIN} className="auth-link">Sign in</Link>
+        </p>
+      </div>
     </div>
   );
 }

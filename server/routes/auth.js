@@ -23,7 +23,14 @@ router.post("/register", async (req, res) => {
       email,
       password,
     });
-    //Generate JWT token for immediate login
+
+    // Ensure JWT secret exists
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not set in environment variables');
+      return res.status(500).json({ message: 'Server configuration error' });
+    }
+
+    // Generate JWT token for immediate login
     const token = jwt.sign(
       {
         userId: newUser.id,
@@ -44,13 +51,35 @@ router.post("/register", async (req, res) => {
       },
     });
   } catch (error) {
-    if (error.name === "SequelizeValidationError") {
+    // Log full error for debugging (include nested Sequelize properties)
+    console.error('Error during registration:');
+    try {
+      // Print message and stack if available
+      console.error('message:', error.message);
+      console.error('stack:', error.stack);
+      // Sequelize stores original DB error on `error.original` or `error.parent`
+      if (error.original) console.error('original:', error.original);
+      if (error.parent) console.error('parent:', error.parent);
+      // Print a serialized version of the error object to capture any extra fields
+      console.error('error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    } catch (logErr) {
+      console.error('Failed to stringify error:', logErr);
+      console.error(error);
+    }
+
+    // Handle common Sequelize errors with more useful messages
+    if (error.name === 'SequelizeValidationError') {
       const messages = error.errors.map((err) => err.message);
       return res.status(400).json({ errors: messages });
     }
 
-    console.error("Error during registration:", error);
-    res.status(500).json({ message: "Server error" });
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const messages = error.errors.map((err) => err.message);
+      return res.status(400).json({ errors: messages });
+    }
+
+    // Generic fallback
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

@@ -40,11 +40,14 @@ export default function Login() {
         password,
     });
 
-      // Save authentication token
+      // Save authentication token and user info
       localStorage.setItem("token", response.data.token);
+      if (response.data.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      }
       
-      // Navigate to tasks page
-      navigate(AUTH_ROUTES.TASKS);
+      // Navigate to home page
+      navigate("/home");
     } catch (err) {
       console.error("Login failed", err);
       setError(getErrorMessage(err));
@@ -58,20 +61,27 @@ export default function Login() {
 
   return (
     <div className="auth-container">
-      <h2 className="auth-header">Login</h2>
-      
-      {error && <p className="auth-error-message">{error}</p>}
-      
-      <form onSubmit={handleSubmit} className="auth-form">
+      <div className="auth-card">
+        <div className="auth-brand">
+          <div className="auth-brand-icon">🎯</div>
+          <span className="auth-brand-name">Slate</span>
+        </div>
+        
+        <h2 className="auth-header">Welcome back</h2>
+        <p className="auth-subheader">Sign in to continue to your tasks</p>
+        
+        {error && <p className="auth-error-message">{error}</p>}
+        
+        <form onSubmit={handleSubmit} className="auth-form">
         <div className="auth-form-group">
           <label className="auth-form-label" htmlFor="email">
-            Email:
+            Email
           </label>
           <input
             id="email"
             className="auth-form-input"
             type="email"
-            placeholder="Email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
@@ -81,13 +91,13 @@ export default function Login() {
 
         <div className="auth-form-group">
           <label className="auth-form-label" htmlFor="password">
-            Password:
+            Password
           </label>
           <input
             id="password"
             className="auth-form-input"
             type="password"
-            placeholder="Password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}
@@ -100,16 +110,17 @@ export default function Login() {
           className="auth-submit-button"
           disabled={isLoading}
         >
-          {isLoading ? "Logging in..." : "Login"}
+          {isLoading ? "Signing in..." : "Sign In"}
         </button>
-      </form>
-      
-      <p className="auth-footer-text">
-        Don't have an account?{" "}
-        <Link to={AUTH_ROUTES.REGISTER} className="auth-link">
-          Register here
-        </Link>
-      </p>
+        </form>
+        
+        <p className="auth-footer-text">
+          Don't have an account?{" "}
+          <Link to={AUTH_ROUTES.REGISTER} className="auth-link">
+            Create one
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
