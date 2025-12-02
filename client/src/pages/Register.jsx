@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 import "./Login.css";
 import {GENERIC_ERROR_MESSAGE, AUTH_ROUTES, API_ENDPOINTS, HTTP_STATUS } from '../constants/authConstants';;
 
-
+/*Register page component Handles user registration and navigation to appropriate page*/
 export default function Register() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -16,15 +16,32 @@ export default function Register() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  // Error handling function
+  const getErrorMessage = (err) => {
+    // Guard clause: no response from server
+    if (!err.response?.data) {
+      return GENERIC_ERROR_MESSAGE.NETWORK_ERROR;
+    }
+  
+    const { errors, message, error } = err.response.data;
+  
+    // Return appropriate error based on response format
+    if (errors) return errors.join(", ");
+    if (message) return message;
+    if (error) return error;
+  
+    // Default server error for unexpected format
+    return GENERIC_ERROR_MESSAGE.SERVER_ERROR;
+  };
 
-  const handleChange = (e) => {
+  const handleChange = (event) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
 
     try {
@@ -45,19 +62,7 @@ export default function Register() {
       }
     } catch (err) {
       console.error("Registration failed", err);
-      if (err.response && err.response.data) {
-        if (err.response.data.errors) {
-          setError(err.response.data.errors.join(", "));
-        } else if (err.response.data.message) {
-          setError(err.response.data.message);
-        } else if (err.response.data.error) {
-          setError(err.response.data.error);
-        } else {
-          setError(GENERIC_ERROR_MESSAGE.SERVER_ERROR);
-        }
-      } else {
-        setError(GENERIC_ERROR_MESSAGE.NETWORK_ERROR);
-      }
+      setError(getErrorMessage(err));
     }
   };
 
