@@ -2,7 +2,7 @@
    Slate Theme - Auth Pages Styling
    =============================================== */
 
-/* Auth page background with gradient */
+/* Auth page background - soft pastel gradient */
 .auth-container {
   position: fixed;
   inset: 0;
@@ -13,14 +13,7 @@
   padding: 20px;
   box-sizing: border-box;
   z-index: 50;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  background: linear-gradient(135deg, #e8f4fc 0%, #f0f7fa 50%, #e5f0f5 100%);
 }
 
 /* Decorative shapes on auth page */
@@ -29,7 +22,7 @@
   content: '';
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(166, 206, 227, 0.3);
   pointer-events: none;
 }
 
@@ -54,11 +47,10 @@
   padding: 40px 36px;
   box-sizing: border-box;
   border-radius: var(--radius-xl, 20px);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
+  background: #fff;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 10px 40px -10px rgba(100, 150, 180, 0.2),
+    0 0 0 1px rgba(166, 206, 227, 0.2);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -76,14 +68,16 @@
 }
 
 .auth-brand-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: var(--radius-lg, 12px);
+  width: 52px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+}
+
+.auth-brand-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .auth-brand-name {
@@ -173,9 +167,9 @@
 
 .auth-form-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #7fb3d3;
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 0 0 4px rgba(166, 206, 227, 0.3);
 }
 
 .auth-form-input::placeholder {
@@ -186,7 +180,7 @@
 .auth-submit-button {
   padding: 14px 20px;
   cursor: pointer;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a9ab8;
   color: #fff;
   border: none;
   border-radius: var(--radius-md, 10px);
@@ -195,26 +189,12 @@
   font-family: inherit;
   transition: all 0.2s ease;
   margin-top: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-.auth-submit-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.2s ease;
 }
 
 .auth-submit-button:hover {
+  background: #4a8aa8;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.4);
-}
-
-.auth-submit-button:hover::before {
-  opacity: 1;
+  box-shadow: 0 8px 20px -5px rgba(90, 154, 184, 0.35);
 }
 
 .auth-submit-button:active {
@@ -222,7 +202,7 @@
 }
 
 .auth-submit-button:disabled {
-  background: #94a3b8;
+  background: #b0c4d0;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -237,14 +217,14 @@
 }
 
 .auth-link {
-  color: #667eea;
+  color: #5a9ab8;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .auth-link:hover {
-  color: #764ba2;
+  color: #4a8aa8;
   text-decoration: underline;
 }
 

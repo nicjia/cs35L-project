@@ -4,7 +4,6 @@ import formatDate from '../../utils/formatDate';
 import calculateUrgency, { priorityLevelToString } from '../../utils/calculateUrgency'; 
 
 export function TaskItem({ task }) {
-  // Get functions from the context
   const { toggleTask, deleteTask, updateTask } = useTasks();
 
   const [editing, setEditing] = useState(false);
@@ -12,9 +11,9 @@ export function TaskItem({ task }) {
     title: task.title,
     priority: task.priority || 'Medium',
     dueDate: task.dueDate || '',
+    isPublic: task.isPublic || false,
   });
 
-  // Calculate the effective urgency priority for display
   const urgencyLevel = calculateUrgency(task);
   const displayPriority = priorityLevelToString(urgencyLevel);
 
@@ -26,102 +25,148 @@ export function TaskItem({ task }) {
     if (trimmedTitle !== task.title) updates.title = trimmedTitle;
     if (draftData.priority !== (task.priority || 'Medium')) updates.priority = draftData.priority;
     if (draftData.dueDate !== (task.dueDate || '')) updates.dueDate = draftData.dueDate || null;
+    if (draftData.isPublic !== task.isPublic) updates.isPublic = draftData.isPublic;
 
     if (Object.keys(updates).length > 0) {
-      updateTask(task.id, updates); // Use the context function
+      updateTask(task.id, updates);
     }
     setEditing(false);
   }
 
-  return (
-    <li className="task-item">
-      <label className="task-left">
-        <input
-          type="checkbox"
-          checked={task.done}
-          onChange={() => toggleTask(task.id)} // Use context function
-        />
-        {editing ? (
-          <>
+  function handleCancel() {
+    setDraftData({
+      title: task.title,
+      priority: task.priority || 'Medium',
+      dueDate: task.dueDate || '',
+      isPublic: task.isPublic || false,
+    });
+    setEditing(false);
+  }
+
+  // Quick toggle visibility without entering edit mode
+  function handleToggleVisibility() {
+    updateTask(task.id, { isPublic: !task.isPublic });
+  }
+
+  if (editing) {
+    return (
+      <li className="task-item task-item-editing">
+        <div className="task-edit-form">
+          <div className="task-edit-row">
             <input
               className="task-edit-input"
               value={draftData.title}
-              onChange={(e) =>
-                setDraftData((prev) => ({ ...prev, title: e.target.value }))
-              }
+              onChange={(e) => setDraftData((prev) => ({ ...prev, title: e.target.value }))}
               onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+              placeholder="Task title..."
               autoFocus
             />
-            <select
-              className="task-edit-priority"
-              value={draftData.priority}
-              onChange={(e) =>
-                setDraftData((prev) => ({ ...prev, priority: e.target.value }))
-              }
-            >
-              <option value="Urgent">Urgent</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-            <input
-              type="date"
-              className="task-edit-date"
-              value={draftData.dueDate}
-              onChange={(e) =>
-                setDraftData((prev) => ({ ...prev, dueDate: e.target.value }))
-              }
-            />
-          </>
-        ) : (
-          <>
-            <span
-              className={`priority-flag priority-${displayPriority.toLowerCase()}`}
-            >
+          </div>
+          <div className="task-edit-row task-edit-options">
+            <div className="task-edit-field">
+              <label className="task-edit-label">Priority</label>
+              <select
+                className="task-edit-select"
+                value={draftData.priority}
+                onChange={(e) => setDraftData((prev) => ({ ...prev, priority: e.target.value }))}
+              >
+                <option value="Urgent">Urgent</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div className="task-edit-field">
+              <label className="task-edit-label">Due Date</label>
+              <input
+                type="date"
+                className="task-edit-date"
+                value={draftData.dueDate}
+                onChange={(e) => setDraftData((prev) => ({ ...prev, dueDate: e.target.value }))}
+              />
+            </div>
+            <div className="task-edit-field">
+              <label className="task-edit-label">Visibility</label>
+              <button
+                type="button"
+                className={`visibility-toggle ${draftData.isPublic ? 'public' : 'private'}`}
+                onClick={() => setDraftData((prev) => ({ ...prev, isPublic: !prev.isPublic }))}
+              >
+                {draftData.isPublic ? '🔓 Public' : '🔒 Private'}
+              </button>
+            </div>
+          </div>
+          <div className="task-edit-actions">
+            <button className="task-btn-styled task-btn-save" onClick={handleSave}>
+              Save Changes
+            </button>
+            <button className="task-btn-styled task-btn-cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </li>
+    );
+  }
+
+  return (
+    <li className="task-item">
+      <div className="task-left">
+        <label className="task-checkbox-wrapper">
+          <input
+            type="checkbox"
+            checked={task.done}
+            onChange={() => toggleTask(task.id)}
+            className="task-checkbox"
+          />
+          <span className="task-checkbox-custom"></span>
+        </label>
+        <div className="task-content">
+          <span className={`task-title ${task.done ? 'task-done' : ''}`}>
+            {task.title}
+          </span>
+          <div className="task-meta">
+            <span className={`priority-badge priority-${displayPriority.toLowerCase()}`}>
               {displayPriority}
             </span>
-            <span className={`task-title ${task.done ? 'task-done' : ''}`}>
-              {task.title}
-            </span>
-
-            <span className={`task-visibility-badge ${task.isPublic ? 'public' : 'private'}`}>
-            {task.isPublic ? '🔓 Public' : '🔒 Private'}
-            </span>
+            <button
+              className={`visibility-badge ${task.isPublic ? 'public' : 'private'}`}
+              onClick={handleToggleVisibility}
+              title="Click to toggle visibility"
+            >
+              {task.isPublic ? '🔓 Public' : '🔒 Private'}
+            </button>
             {task.dueDate && (
               <span className="task-due-date">
-                {formatDate(task.dueDate)}
+                📅 {formatDate(task.dueDate)}
               </span>
             )}
-            
-          </>
-        )}
-      </label>
+          </div>
+        </div>
+      </div>
 
       <div className="task-actions">
-        {editing ? (
-          <button className="task-btn task-btn-save" onClick={handleSave}>
-            Save
-          </button>
-        ) : (
-          <button
-            className="task-btn task-btn-edit"
-            onClick={() => {
-              setDraftData({
-                title: task.title,
-                priority: task.priority || 'Medium',
-                dueDate: task.dueDate || '',
-              });
-              setEditing(true);
-            }}
-          >
-            Edit
-          </button>
-        )}
         <button
-          className="task-btn task-btn-danger"
-          onClick={() => deleteTask(task.id)} // Use context function
+          className="task-btn-icon"
+          onClick={() => {
+            setDraftData({
+              title: task.title,
+              priority: task.priority || 'Medium',
+              dueDate: task.dueDate || '',
+              isPublic: task.isPublic || false,
+            });
+            setEditing(true);
+          }}
+          title="Edit task"
         >
-          Delete
+          ✏️
+        </button>
+        <button
+          className="task-btn-icon task-btn-icon-danger"
+          onClick={() => deleteTask(task.id)}
+          title="Delete task"
+        >
+          🗑️
         </button>
       </div>
     </li>

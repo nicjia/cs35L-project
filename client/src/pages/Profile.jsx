@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Profile() {
   // Get user info from localStorage
@@ -8,6 +8,36 @@ function Profile() {
   const fullName = user.firstName && user.lastName 
     ? `${user.firstName} ${user.lastName}` 
     : user.firstName || 'User';
+
+  // Preferences state (stored in localStorage for persistence)
+  const [preferences, setPreferences] = useState(() => {
+    const saved = localStorage.getItem('userPreferences');
+    return saved ? JSON.parse(saved) : {
+      theme: 'light',
+      notifications: true,
+      language: 'en',
+    };
+  });
+
+  // Save preferences to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('userPreferences', JSON.stringify(preferences));
+  }, [preferences]);
+
+  const handleThemeChange = (e) => {
+    setPreferences(prev => ({ ...prev, theme: e.target.value }));
+  };
+
+  const handleNotificationsToggle = () => {
+    setPreferences(prev => ({ ...prev, notifications: !prev.notifications }));
+  };
+
+  const handleLanguageChange = (e) => {
+    setPreferences(prev => ({ ...prev, language: e.target.value }));
+  };
+
+  const themeLabels = { light: 'Light', dark: 'Dark', system: 'System' };
+  const languageLabels = { en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch' };
 
   return (
     <div className="Profile page">
@@ -44,15 +74,39 @@ function Profile() {
         <h2>Preferences</h2>
         <div className="settings-item">
           <span className="settings-label">Theme</span>
-          <span className="settings-value">Light</span>
+          <select 
+            className="settings-select"
+            value={preferences.theme}
+            onChange={handleThemeChange}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
         </div>
         <div className="settings-item">
           <span className="settings-label">Notifications</span>
-          <span className="settings-value">Enabled</span>
+          <button
+            className={`settings-toggle ${preferences.notifications ? 'active' : ''}`}
+            onClick={handleNotificationsToggle}
+            aria-pressed={preferences.notifications}
+          >
+            <span className="toggle-slider"></span>
+            <span className="toggle-label">{preferences.notifications ? 'On' : 'Off'}</span>
+          </button>
         </div>
         <div className="settings-item">
           <span className="settings-label">Language</span>
-          <span className="settings-value">English</span>
+          <select
+            className="settings-select"
+            value={preferences.language}
+            onChange={handleLanguageChange}
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+          </select>
         </div>
       </div>
 

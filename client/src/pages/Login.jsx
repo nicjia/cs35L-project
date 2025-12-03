@@ -63,7 +63,13 @@ export default function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="auth-brand-icon">🎯</div>
+          <div className="auth-brand-icon">
+            <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="112" height="92" rx="16" fill="#a6cedb" />
+              <rect x="12" y="12" width="96" height="76" rx="10" fill="#4a5568" />
+              <path d="M20 65 Q35 65 50 50 Q70 30 100 45" stroke="#a6cedb" strokeWidth="6" strokeLinecap="round" fill="none" />
+            </svg>
+          </div>
           <span className="auth-brand-name">Slate</span>
         </div>
         

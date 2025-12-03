@@ -35,7 +35,11 @@ const Sidebar = ({ onLogout }) => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span>🎯</span>
+          <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="112" height="92" rx="16" fill="#a6cedb" />
+            <rect x="12" y="12" width="96" height="76" rx="10" fill="#4a5568" />
+            <path d="M20 65 Q35 65 50 50 Q70 30 100 45" stroke="#a6cedb" strokeWidth="6" strokeLinecap="round" fill="none" />
+          </svg>
         </div>
         <span className="sidebar-brand">Slate</span>
       </div>
@@ -137,6 +141,7 @@ const Sidebar = ({ onLogout }) => {
 // Top Header Component
 const TopHeader = () => {
   const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
   const today = new Date();
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const dateStr = today.toLocaleDateString('en-US', options);
@@ -146,13 +151,66 @@ const TopHeader = () => {
   const user = userStr ? JSON.parse(userStr) : { firstName: 'User' };
   const initials = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U';
 
+  // Demo notifications (frontend-only for now)
+  const notifications = [
+    { id: 1, type: 'reminder', message: 'Task "Project Report" is due today', time: '2h ago', unread: true },
+    { id: 2, type: 'overdue', message: 'You have 2 overdue tasks', time: '5h ago', unread: true },
+    { id: 3, type: 'completed', message: 'You completed 5 tasks this week! 🎉', time: '1d ago', unread: false },
+  ];
+
+  const unreadCount = notifications.filter(n => n.unread).length;
+
   return (
     <header className="top-header">
       <div className="header-left">
         <span className="header-date">{dateStr}</span>
       </div>
       <div className="header-right">
-        <button className="header-icon-btn">🔔</button>
+        <div className="notification-wrapper">
+          <button 
+            className={`header-icon-btn ${showNotifications ? 'active' : ''}`}
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            🔔
+            {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+          </button>
+          {showNotifications && (
+            <div className="notification-dropdown">
+              <div className="notification-header">
+                <span className="notification-title">Notifications</span>
+                <button className="mark-read-btn">Mark all read</button>
+              </div>
+              <div className="notification-list">
+                {notifications.map(notif => (
+                  <div 
+                    key={notif.id} 
+                    className={`notification-item ${notif.unread ? 'unread' : ''}`}
+                    onClick={() => {
+                      if (notif.type === 'overdue') navigate('/tasks?filter=overdue');
+                      else if (notif.type === 'reminder') navigate('/tasks?filter=today');
+                      setShowNotifications(false);
+                    }}
+                  >
+                    <span className="notification-icon">
+                      {notif.type === 'reminder' && '📅'}
+                      {notif.type === 'overdue' && '⚠️'}
+                      {notif.type === 'completed' && '✅'}
+                    </span>
+                    <div className="notification-content">
+                      <p className="notification-message">{notif.message}</p>
+                      <span className="notification-time">{notif.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="notification-footer">
+                <button onClick={() => { navigate('/tasks'); setShowNotifications(false); }}>
+                  View all notifications
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         <button 
           className="profile-btn"
           onClick={() => navigate('/profile')}
