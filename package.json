@@ -1,0 +1,22 @@
+{
+  "name": "cs35l-project",
+  "version": "1.0.0",
+  "description": "CS35L - Fall 2025 Group Project",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicjia/cs35L-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicjia/cs35L-project/issues"
+  },
+  "homepage": "https://github.com/nicjia/cs35L-project#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^24.10.1"
+  }
+}
