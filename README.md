@@ -6,44 +6,102 @@ Group Members:
 Nicholas Jiang
 Melis Fidansoy
 
+## Prerequisites
+- Node.js (v18+ recommended)
+- npm (or pnpm/yarn) — examples use `npm`
+- MySQL server (local or remote)
+- A terminal (macOS: zsh)
 
-git clone <repository-adress>
+## Quick start (development)
+1. Clone the repo:
 
-add .env file under the server in the following format:
-
-DB_USER=root
-
-DB_PASSWORD=""
-
-DB_NAME=cs35l_project
-
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-
-Start 2 different terminals:
-
-Terminal 1: 
+```bash
+git clone https://github.com/nicjia/task-manager
 cd task-manager
+```
+
+2. Create the database (example name used below: task_manager). You can use either MySQL CLI or a GUI tool:
+
+```bash
+# using mysql CLI
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS task_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+3. Install server dependencies and create `.env` for the server:
+
+```bash
+# in repo root
 cd server
-rm -rf node_modules package-lock.json
 npm install
+# create .env (see example below)
+```
 
+4. Install client dependencies:
+
+```bash
+cd ../client
+npm install
+```
+
+5. Start the backend and frontend in separate terminals (development):
+
+Terminal A (server):
+
+```bash
+cd task-manager/server
 npm start
+```
 
-Terminal 2:
-cd task-manager
-cd client
-rm -rf node_modules package-lock.json
-npm install
+Terminal B (client):
 
+```bash
+cd task-manager/client
 npm run dev
+```
 
-Note: install nodemailer for Forget Password option
+By default the server runs on `http://localhost:3001` and the Vite dev server runs on `http://localhost:5174`.
 
+## Environment variables (.env example)
 
+Create a `.env` file inside the `server/` folder with the following (example):
+```env
+DB_USER=
+DB_PASSWORD=
+DB_NAME=task_manager
+JWT_SECRET=
+```
 
+Notes:
+- `DB_USER`, `DB_PASSWORD`, and `DB_NAME` must match your MySQL credentials and database name.
+- `JWT_SECRET` should be a secure secret for signing tokens.
 
+## Database setup
 
+- The repo includes `server/schema.sql` — you can run this to create tables and seed data (if provided):
 
+```bash
+# from repo root
+mysql -u $DB_USER -p $DB_NAME < server/schema.sql
+```
+The backend uses Sequelize and will also sync models at runtime (see `server/index.js`). 
 
+## Running the Server
+```bash
+cd server
+npm start
+```
 
+## Running the client
+Development:
+```bash
+cd client
+npm run dev
+```
 
+## Helpful commands
+
+- Install server deps: `cd server && npm install`
+- Install client deps: `cd client && npm install`
+- Start server: `cd server && npm start`
+- Start client dev: `cd client && npm run dev`
+- Run DB schema: `mysql -u $DB_USER -p $DB_NAME < server/schema.sql`
