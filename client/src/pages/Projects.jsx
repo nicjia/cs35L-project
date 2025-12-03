@@ -27,9 +27,17 @@ export default function Projects() {
   const [dragOverTarget, setDragOverTarget] = useState(null);
   const [showAddTaskModal, setShowAddTaskModal] = useState(null); // projectId or 'general'
   const [newTask, setNewTask] = useState({ title: "", dueDate: "", priority: "Medium", isPublic: false });
+  const [taskSearch, setTaskSearch] = useState(""); // Search query for tasks
 
   // Compute general tasks (tasks without a project) from context
   const generalTasks = allTasks.filter((t) => !t.ProjectId);
+
+  // Filter tasks based on search query (for the search panel)
+  const searchedTasks = taskSearch.trim()
+    ? allTasks.filter((t) =>
+        t.title.toLowerCase().includes(taskSearch.toLowerCase())
+      )
+    : [];
 
   // Get tasks for a specific project from context
   const getProjectTasks = (projectId) => {
@@ -190,6 +198,56 @@ export default function Projects() {
         >
           + New Project
         </button>
+      </div>
+
+      {/* Task Search Panel */}
+      <div className="task-search-panel">
+        <div className="task-search-header">
+          <span className="search-icon">🔍</span>
+          <input
+            type="text"
+            className="task-search-input"
+            placeholder="Search tasks to drag into projects..."
+            value={taskSearch}
+            onChange={(e) => setTaskSearch(e.target.value)}
+          />
+          {taskSearch && (
+            <button className="clear-search" onClick={() => setTaskSearch("")}>
+              ✕
+            </button>
+          )}
+        </div>
+        {searchedTasks.length > 0 && (
+          <div className="task-search-results">
+            {searchedTasks.slice(0, 10).map((task) => (
+              <div
+                key={task.id}
+                className={`search-result-item ${task.done ? "done" : ""}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task, task.ProjectId)}
+                onDragEnd={handleDragEnd}
+              >
+                <span className="task-title">{task.title}</span>
+                <span className={`priority-badge ${task.priority?.toLowerCase()}`}>
+                  {task.priority}
+                </span>
+                {task.ProjectId && (
+                  <span className="current-project">
+                    📁 {projects.find(p => p.id === task.ProjectId)?.name || "Project"}
+                  </span>
+                )}
+              </div>
+            ))}
+            {searchedTasks.length > 10 && (
+              <div className="more-results">
+                +{searchedTasks.length - 10} more results
+              </div>
+            )}
+          </div>
+        )}
+        {taskSearch && searchedTasks.length === 0 && (
+          <div className="no-search-results">No tasks found matching "{taskSearch}"</div>
+        )}
       </div>
 
       {/* New Project Modal */}
