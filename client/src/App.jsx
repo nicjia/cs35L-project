@@ -11,7 +11,7 @@ import {
 import "./App.css";
 
 import { TaskProvider } from "./contexts/TaskContext.jsx";
-import { notificationsApi, friendsApi, userApi } from "./services/api";
+import { notificationsApi, friendsApi, userApi, projectsApi } from "./services/api";
 
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
@@ -22,16 +22,34 @@ import Login from "./pages/Login";
 import Register from "./pages/Register.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import Projects from "./pages/Projects.jsx";
 
 // Sidebar Component
 const Sidebar = ({ onLogout }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [openDropdowns, setOpenDropdowns] = useState({ tasks: true });
+  const [openDropdowns, setOpenDropdowns] = useState({ tasks: true, projects: true });
   const [sidebarSearch, setSidebarSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [projects, setProjects] = useState([]);
   const searchRef = useRef(null);
+
+  // Fetch projects for sidebar
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await projectsApi.getAll();
+        setProjects(res.data.slice(0, 5)); // Show max 5 in sidebar
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+      }
+    };
+    fetchProjects();
+    // Refresh when navigating back to a project-related page
+    const interval = setInterval(fetchProjects, 30000);
+    return () => clearInterval(interval);
+  }, [location.pathname]);
 
   // Pages for navigation search
   const pages = [
@@ -42,6 +60,7 @@ const Sidebar = ({ onLogout }) => {
     { name: 'Overdue Tasks', path: '/tasks?filter=overdue', keywords: ['overdue', 'late', 'missed'] },
     { name: 'High Priority', path: '/tasks?filter=high', keywords: ['high', 'priority', 'urgent', 'important'] },
     { name: 'Completed', path: '/tasks?filter=completed', keywords: ['completed', 'done', 'finished'] },
+    { name: 'Projects', path: '/projects', keywords: ['projects', 'organize', 'folders'] },
     { name: 'Friends', path: '/friends', keywords: ['friends', 'users', 'people', 'social'] },
     { name: 'Settings', path: '/profile', keywords: ['settings', 'profile', 'account', 'preferences'] },
   ];
@@ -174,22 +193,24 @@ const Sidebar = ({ onLogout }) => {
           >
             <span className="nav-item-icon">📁</span>
             Projects
-            <span className="nav-item-badge">3</span>
+            {projects.length > 0 && <span className="nav-item-badge">{projects.length}</span>}
             <span className={`nav-item-arrow ${openDropdowns.projects ? 'expanded' : ''}`}>›</span>
           </button>
           <div className={`nav-dropdown ${openDropdowns.projects ? 'open' : ''}`}>
-            <Link to="/home" className="nav-dropdown-item">
-              <span className="dot" style={{background: '#fb7185'}}></span>
-              Work
+            <Link to="/projects" className="nav-dropdown-item">
+              <span className="dot" style={{background: '#3b82f6'}}></span>
+              All Projects
             </Link>
-            <Link to="/home" className="nav-dropdown-item">
-              <span className="dot" style={{background: '#fbbf24'}}></span>
-              Personal
-            </Link>
-            <Link to="/home" className="nav-dropdown-item">
-              <span className="dot" style={{background: '#4ade80'}}></span>
-              Study
-            </Link>
+            {projects.map(project => (
+              <Link 
+                key={project.id} 
+                to={`/projects?id=${project.id}`} 
+                className="nav-dropdown-item"
+              >
+                <span className="dot" style={{background: project.color}}></span>
+                {project.name}
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -230,6 +251,8 @@ const TopHeader = ({ toasts, setToasts }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
+  const [showPermissionBanner, setShowPermissionBanner] = useState(false);
   const notifRef = useRef(null);
   const today = new Date();
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
@@ -286,7 +309,7 @@ const TopHeader = ({ toasts, setToasts }) => {
     prevNotifCountRef.current = unreadCount;
   }, [notifications]);
 
-  // Show toast notification
+  // Show toast notification with Chrome-style browser notification
   const showToast = (notif) => {
     const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
     if (preferences.notifications === false) return; // Respect notification preference
@@ -300,24 +323,76 @@ const TopHeader = ({ toasts, setToasts }) => {
     };
     setToasts(prev => [...prev, toast]);
 
-    // Try browser notification if permitted
-    if (Notification.permission === 'granted') {
-      new Notification('Slate', { body: notif.message, icon: '/favicon.ico' });
+    // Chrome-style browser notification with action buttons
+    if (notificationPermission === 'granted') {
+      const browserNotif = new Notification('Slate', { 
+        body: notif.message, 
+        icon: '/slate-icon.svg',
+        badge: '/slate-icon.svg',
+        tag: `slate-${notif.id}`, // Prevent duplicates
+        requireInteraction: notif.type === 'friend_request', // Keep friend requests visible
+        silent: false,
+      });
+      
+      // Handle notification click - focus app and navigate
+      browserNotif.onclick = () => {
+        window.focus();
+        if (notif.type === 'friend_request') {
+          navigate('/friends');
+        } else if (notif.type === 'bump') {
+          navigate('/tasks');
+        } else if (notif.type === 'friend_accepted') {
+          navigate(`/user/${notif.fromUser?.username}`);
+        }
+        browserNotif.close();
+      };
     }
 
-    // Auto dismiss after 5 seconds
+    // Auto dismiss in-app toast after 5 seconds
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== toastId));
     }, 5000);
   };
 
-  // Request browser notification permission
+  // Request browser notification permission - show banner if not decided
   useEffect(() => {
     const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-    if (preferences.notifications && Notification.permission === 'default') {
-      Notification.requestPermission();
+    const dismissedBanner = localStorage.getItem('notificationBannerDismissed');
+    
+    // Show banner if notifications enabled in preferences but no browser permission yet
+    if (preferences.notifications !== false && 
+        Notification.permission === 'default' && 
+        !dismissedBanner) {
+      // Show banner after a short delay so user sees the app first
+      const timer = setTimeout(() => setShowPermissionBanner(true), 2000);
+      return () => clearTimeout(timer);
     }
   }, []);
+
+  // Handle permission request
+  const requestNotificationPermission = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      setShowPermissionBanner(false);
+      
+      if (permission === 'granted') {
+        // Show a test notification
+        new Notification('Notifications Enabled!', {
+          body: 'You\'ll now receive alerts for friend requests, bumps, and reminders.',
+          icon: '/slate-icon.svg',
+        });
+      }
+    } catch (err) {
+      console.error('Error requesting notification permission:', err);
+    }
+  };
+
+  // Dismiss permission banner permanently
+  const dismissPermissionBanner = () => {
+    setShowPermissionBanner(false);
+    localStorage.setItem('notificationBannerDismissed', 'true');
+  };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -402,6 +477,26 @@ const TopHeader = ({ toasts, setToasts }) => {
 
   return (
     <header className="top-header">
+      {/* Chrome-style notification permission banner */}
+      {showPermissionBanner && (
+        <div className="notification-permission-banner">
+          <div className="permission-content">
+            <span className="permission-icon">🔔</span>
+            <div className="permission-text">
+              <strong>Enable notifications</strong>
+              <p>Get alerts for friend requests, bumps, and task reminders</p>
+            </div>
+          </div>
+          <div className="permission-actions">
+            <button className="permission-allow" onClick={requestNotificationPermission}>
+              Allow
+            </button>
+            <button className="permission-dismiss" onClick={dismissPermissionBanner}>
+              Not now
+            </button>
+          </div>
+        </div>
+      )}
       <div className="header-left">
         <span className="header-date">{dateStr}</span>
       </div>
@@ -554,6 +649,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/user/:username" element={<UserProfile />} />
         </Route>

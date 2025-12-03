@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import taskInterface from "../services/taskInterface";
 
 const TaskContext = createContext();
@@ -10,26 +10,35 @@ export function useTasks() {
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
 
-  // 1. (Read) Get all tasks on app load
-  useEffect(() => {
-    async function fetchTasks() {
-      try {
-        const data = await taskInterface.getTasks();
-        setTasks(data);
-      } catch (err) {
-        console.error("Failed to fetch tasks:", err);
-      }
+  // Fetch tasks function that can be called to refresh
+  const fetchTasks = useCallback(async () => {
+    try {
+      const data = await taskInterface.getTasks();
+      setTasks(data);
+    } catch (err) {
+      console.error("Failed to fetch tasks:", err);
     }
-    fetchTasks();
   }, []);
 
+  // 1. (Read) Get all tasks on app load
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  // Refresh tasks - exposed to components
+  const refreshTasks = useCallback(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
   // 2. (Create) Add a new task
-  async function addTask({ title, dueDate }) {
+  async function addTask({ title, dueDate, priority, isPublic, ProjectId }) {
     try {
       const newTaskData = {
         title,
         dueDate: dueDate || null,
-        priority: "Normal",
+        priority: priority || "Medium",
+        isPublic: isPublic || false,
+        ProjectId: ProjectId || null,
         done: false,
       };
       const newTask = await taskInterface.addTask(newTaskData);
@@ -76,6 +85,7 @@ export function TaskProvider({ children }) {
     updateTask,
     toggleTask,
     deleteTask,
+    refreshTasks,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

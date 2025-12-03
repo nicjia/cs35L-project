@@ -134,6 +134,18 @@ export function TaskItem({ task }) {
             >
               {task.isPublic ? '🔓 Public' : '🔒 Private'}
             </button>
+            {task.project && (
+              <span 
+                className="project-badge"
+                style={{ 
+                  backgroundColor: `${task.project.color}20`,
+                  color: task.project.color,
+                  borderColor: task.project.color 
+                }}
+              >
+                📁 {task.project.name}
+              </span>
+            )}
             {task.dueDate && (
               <span className="task-due-date">
                 📅 {formatDate(task.dueDate)}

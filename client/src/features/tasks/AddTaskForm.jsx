@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTasks } from '../../contexts/TaskContext'; 
+import { projectsApi } from '../../services/api';
 
 export function AddTaskForm({ onSuccess }) {
   const { addTask } = useTasks(); 
@@ -7,6 +8,21 @@ export function AddTaskForm({ onSuccess }) {
   const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [isPublic, setIsPublic] = useState(false);
+  const [projectId, setProjectId] = useState('');
+  const [projects, setProjects] = useState([]);
+
+  // Fetch projects for dropdown
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await projectsApi.getAll();
+        setProjects(res.data);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -17,12 +33,14 @@ export function AddTaskForm({ onSuccess }) {
       title: t, 
       dueDate: dueDate || null,
       priority: priority,
-      isPublic: isPublic
+      isPublic: isPublic,
+      ProjectId: projectId ? parseInt(projectId) : null
     }); 
     setTitle('');
     setDueDate('');
     setPriority('Medium');
     setIsPublic(false);
+    setProjectId('');
     if (onSuccess) onSuccess();
   }
 
@@ -59,6 +77,21 @@ export function AddTaskForm({ onSuccess }) {
             <option value="Medium">Medium</option>
             <option value="High">High</option>
             <option value="Urgent">Urgent</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Project</label>
+          <select 
+            className="task-project-select"
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+          >
+            <option value="">No Project</option>
+            {projects.map(project => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
+            ))}
           </select>
         </div>
         <div className="form-group">

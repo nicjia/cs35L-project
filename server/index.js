@@ -16,16 +16,25 @@ const notificationRoutes = require("./routes/notifications");
 const friendRoutes = require("./routes/friends");
 const bumpRoutes = require("./routes/bumps");
 const userRoutes = require("./routes/users");
+const projectRoutes = require("./routes/projects");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/friends", friendRoutes);
 app.use("/api/bumps", bumpRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/projects", projectRoutes);
 
 app.get("/api/tasks", auth, (req, res) => {
   db.Task.findAll({
     where: { UserId: req.user.userId },
+    include: [
+      {
+        model: db.Project,
+        as: "project",
+        attributes: ["id", "name", "color"],
+      },
+    ],
     order: [["createdAt", "ASC"]],
   })
     .then((tasks) => {

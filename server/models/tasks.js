@@ -30,12 +30,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false, //or true depending on preference
     },
+
+    ProjectId: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // null means not in any project (general task)
+      references: {
+        model: "Projects",
+        key: "id",
+      },
+    },
   });
 
   Task.associate = (models) => {
     Task.belongsTo(models.User, {
       foreignKey: "UserId",
       as: "user",
+    });
+    Task.belongsTo(models.Project, {
+      foreignKey: "ProjectId",
+      as: "project",
     });
   };
 

@@ -76,4 +76,14 @@ export const bumpsApi = {
   sendBump: (taskId, message) => api.post('/bumps', { taskId, message }),
 };
 
+// ============ Projects API ============
+export const projectsApi = {
+  getAll: () => api.get('/projects'),
+  getById: (id) => api.get(`/projects/${id}`),
+  create: (data) => api.post('/projects', data),
+  update: (id, data) => api.put(`/projects/${id}`, data),
+  delete: (id) => api.delete(`/projects/${id}`),
+  moveTask: (projectId, taskId) => api.put(`/projects/${projectId}/tasks/${taskId}`),
+};
+
 export default api;

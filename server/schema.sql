@@ -12,6 +12,34 @@ CREATE TABLE IF NOT EXISTS users (
 -- Note: The following tables are managed by Sequelize ORM and will be auto-created.
 -- This is for documentation purposes only.
 
+-- Projects table
+-- CREATE TABLE IF NOT EXISTS Projects (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   name VARCHAR(255) NOT NULL,
+--   color VARCHAR(7) NOT NULL DEFAULT '#3b82f6',
+--   description TEXT,
+--   UserId INT NOT NULL,
+--   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--   FOREIGN KEY (UserId) REFERENCES Users(id) ON DELETE CASCADE
+-- );
+
+-- Tasks table (with ProjectId FK)
+-- CREATE TABLE IF NOT EXISTS Tasks (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   title VARCHAR(255) NOT NULL,
+--   done BOOLEAN DEFAULT FALSE,
+--   priority VARCHAR(50) DEFAULT 'Medium',
+--   dueDate DATE,
+--   isPublic BOOLEAN DEFAULT FALSE,
+--   UserId INT NOT NULL,
+--   ProjectId INT,
+--   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--   FOREIGN KEY (UserId) REFERENCES Users(id) ON DELETE CASCADE,
+--   FOREIGN KEY (ProjectId) REFERENCES Projects(id) ON DELETE SET NULL
+-- );
+
 -- Notifications table
 -- CREATE TABLE IF NOT EXISTS Notifications (
 --   id INT AUTO_INCREMENT PRIMARY KEY,
