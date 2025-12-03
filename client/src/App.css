@@ -1446,7 +1446,7 @@ main {
 .task-done-btn:hover {
   border-color: var(--accent-green);
   background: #f0fdf4;
-  color: #bbf7d0;
+  color: var(--accent-green);
 }
 
 .task-done-btn.completed {

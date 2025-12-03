@@ -117,7 +117,7 @@ export function TaskItem({ task }) {
           onClick={() => toggleTask(task.id)}
           title={task.done ? 'Mark as incomplete' : 'Mark as done'}
         >
-          {task.done ? '✓' : ''}
+          ✓
         </button>
         <div className="task-content">
           <span className={`task-title ${task.done ? 'task-done' : ''}`}>
