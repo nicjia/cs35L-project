@@ -5,6 +5,8 @@ CS35L - Fall 2025 Group Project
 Group Members:
 Nicholas Jiang
 Melis Fidansoy
+Amadeu Behrend
+Zachary Som
 
 ## Prerequisites
 - Node.js (v18+ recommended)
