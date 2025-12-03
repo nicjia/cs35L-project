@@ -4,6 +4,7 @@ const { User, Task, Friend } = require("../models");
 const { Op } = require("sequelize");
 const auth = require("../middleware/auth");
 const bcrypt = require("bcryptjs");
+const { scoreUser } = require("../utils/searchUtils");
 
 // Get current user's full profile (for settings page)
 router.get("/me", auth, async (req, res) => {
@@ -111,7 +112,7 @@ router.patch("/me", auth, async (req, res) => {
   }
 });
 
-// Search users by username (partial match)
+// Search users with relevance scoring
 router.get("/search", auth, async (req, res) => {
   try {
     const { q } = req.query;
@@ -120,6 +121,7 @@ router.get("/search", auth, async (req, res) => {
       return res.status(400).json({ error: "Search query must be at least 2 characters" });
     }
 
+    // Fetch candidate users with broad LIKE match
     const users = await User.findAll({
       where: {
         [Op.and]: [
@@ -134,10 +136,30 @@ router.get("/search", auth, async (req, res) => {
         ],
       },
       attributes: ["id", "firstName", "lastName", "username"],
-      limit: 20,
+      limit: 50, // Fetch more candidates for scoring
     });
 
-    res.json(users);
+    // Score and sort by relevance
+    const scoredUsers = users.map(user => {
+      const { score, matchedFields } = scoreUser(user.toJSON(), q);
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        score,
+        matchedFields,
+      };
+    });
+
+    // Sort by score descending, then by username alphabetically
+    scoredUsers.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.username.localeCompare(b.username);
+    });
+
+    // Return top 20 results
+    res.json(scoredUsers.slice(0, 20));
   } catch (error) {
     console.error("Error searching users:", error);
     res.status(500).json({ error: "Failed to search users" });
