@@ -15,6 +15,8 @@ import { TaskProvider } from "./contexts/TaskContext.jsx";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Tasks from "./pages/Tasks";
+import Friends from "./pages/Friends";
+import UserProfile from "./pages/UserProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
@@ -115,6 +117,16 @@ const Sidebar = ({ onLogout }) => {
               Study
             </Link>
           </div>
+        </div>
+
+        <div className="nav-section">
+          <Link 
+            to="/friends" 
+            className={`nav-item ${isActive('/friends') || location.pathname.startsWith('/user/') ? 'active' : ''}`}
+          >
+            <span className="nav-item-icon">👥</span>
+            Friends
+          </Link>
         </div>
 
         <div className="nav-section">
@@ -265,6 +277,8 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/user/:username" element={<UserProfile />} />
         </Route>
       </Routes>
     </div>

@@ -32,12 +32,18 @@ function Profile() {
     setPreferences(prev => ({ ...prev, notifications: !prev.notifications }));
   };
 
-  const handleLanguageChange = (e) => {
-    setPreferences(prev => ({ ...prev, language: e.target.value }));
-  };
-
-  const themeLabels = { light: 'Light', dark: 'Dark', system: 'System' };
-  const languageLabels = { en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch' };
+  // Apply theme when it changes
+  useEffect(() => {
+    const root = document.documentElement;
+    if (preferences.theme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else if (preferences.theme === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    } else {
+      root.setAttribute('data-theme', 'light');
+    }
+  }, [preferences.theme]);
 
   return (
     <div className="Profile page">
@@ -92,21 +98,7 @@ function Profile() {
             aria-pressed={preferences.notifications}
           >
             <span className="toggle-slider"></span>
-            <span className="toggle-label">{preferences.notifications ? 'On' : 'Off'}</span>
           </button>
-        </div>
-        <div className="settings-item">
-          <span className="settings-label">Language</span>
-          <select
-            className="settings-select"
-            value={preferences.language}
-            onChange={handleLanguageChange}
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-          </select>
         </div>
       </div>
 
