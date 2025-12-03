@@ -32,6 +32,46 @@ function isOverdue(dateStr, done) {
   return taskDate < today;
 }
 
+// Helper to parse date for sorting (returns timestamp, Infinity if no date)
+function getDateTimestamp(dateStr) {
+  if (!dateStr) return Infinity;
+  return new Date(dateStr + 'T00:00:00').getTime();
+}
+
+// Sort tasks: uncompleted first (by date), then completed at bottom
+function sortTasks(taskList, sortMode = 'all') {
+  return [...taskList].sort((a, b) => {
+    // Always put completed tasks at the bottom
+    if (a.done !== b.done) {
+      return a.done ? 1 : -1;
+    }
+    
+    // For active/uncompleted tasks, sort by due date
+    if (!a.done && !b.done) {
+      const aOverdue = isOverdue(a.dueDate, a.done);
+      const bOverdue = isOverdue(b.dueDate, b.done);
+      
+      // Overdue tasks first
+      if (aOverdue !== bOverdue) {
+        return aOverdue ? -1 : 1;
+      }
+      
+      // Then by due date (earliest first, no date at end)
+      const aDate = getDateTimestamp(a.dueDate);
+      const bDate = getDateTimestamp(b.dueDate);
+      if (aDate !== bDate) {
+        return aDate - bDate;
+      }
+      
+      // Finally by creation date (newest first)
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    
+    // For completed tasks, newest completions first
+    return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+  });
+}
+
 export default function Tasks() {
   const { tasks } = useTasks();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,6 +117,9 @@ export default function Tasks() {
     }
   });
 
+  // Sort the filtered tasks
+  const sortedTasks = sortTasks(filteredTasks, filter);
+
   // Counts for filter badges
   const counts = {
     all: tasks.length,
@@ -120,7 +163,7 @@ export default function Tasks() {
       )}
 
       <div className="tasks-filters">
-        {['all', 'active', 'today', 'upcoming', 'overdue', 'high', 'completed'].map(f => (
+        {['active', 'today', 'overdue', 'upcoming', 'high', 'completed', 'all'].map(f => (
           <button 
             key={f}
             className={`filter-btn ${filter === f ? 'active' : ''} ${f === 'overdue' && counts.overdue > 0 ? 'has-overdue' : ''}`}
@@ -132,8 +175,8 @@ export default function Tasks() {
       </div>
 
       <div className="tasks-content">
-        {filteredTasks.length > 0 ? (
-          <TaskList tasks={filteredTasks} />
+        {sortedTasks.length > 0 ? (
+          <TaskList tasks={sortedTasks} />
         ) : (
           <div className="empty-state">
             <span className="empty-icon">📝</span>

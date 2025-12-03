@@ -1010,6 +1010,28 @@ main {
   box-shadow: var(--shadow-sm);
 }
 
+/* Overdue task highlight */
+.task-item.task-overdue {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+/* Hover State */
+.task-item.task-overdue:hover {
+  background: #fecaca; 
+  border-color: #f87171; 
+}
+
+[data-theme="dark"] .task-item.task-overdue {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="dark"] .task-item.task-overdue:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
 .task-left {
   display: flex;
   align-items: center;

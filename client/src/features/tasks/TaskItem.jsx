@@ -3,7 +3,7 @@ import { useTasks } from '../../contexts/TaskContext';
 import formatDate from '../../utils/formatDate';
 import calculateUrgency, { priorityLevelToString } from '../../utils/calculateUrgency'; 
 
-export function TaskItem({ task }) {
+export function TaskItem({ task, isOverdue = false }) {
   const { toggleTask, deleteTask, updateTask } = useTasks();
 
   const [editing, setEditing] = useState(false);
@@ -110,7 +110,7 @@ export function TaskItem({ task }) {
   }
 
   return (
-    <li className="task-item">
+    <li className={`task-item ${isOverdue ? 'task-overdue' : ''}`}>
       <div className="task-left">
         <button
           className={`task-done-btn ${task.done ? 'completed' : ''}`}

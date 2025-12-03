@@ -83,7 +83,15 @@ app.put("/api/tasks/:id", auth, (req, res) => {
       if (rowsAffected === 0) {
         return res.status(404).json({ error: "Task not found" });
       }
-      return db.Task.findByPk(taskId); // Note: db.Task
+      return db.Task.findByPk(taskId, {
+        include: [
+          {
+            model: db.Project,
+            as: "project",
+            attributes: ["id", "name", "color"],
+          },
+        ],
+      });
     })
     .then((task) => {
       res.json(task);
