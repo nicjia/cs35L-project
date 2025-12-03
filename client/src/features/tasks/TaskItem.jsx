@@ -112,15 +112,13 @@ export function TaskItem({ task }) {
   return (
     <li className="task-item">
       <div className="task-left">
-        <label className="task-checkbox-wrapper">
-          <input
-            type="checkbox"
-            checked={task.done}
-            onChange={() => toggleTask(task.id)}
-            className="task-checkbox"
-          />
-          <span className="task-checkbox-custom"></span>
-        </label>
+        <button
+          className={`task-done-btn ${task.done ? 'completed' : ''}`}
+          onClick={() => toggleTask(task.id)}
+          title={task.done ? 'Mark as incomplete' : 'Mark as done'}
+        >
+          {task.done ? '✓' : ''}
+        </button>
         <div className="task-content">
           <span className={`task-title ${task.done ? 'task-done' : ''}`}>
             {task.title}

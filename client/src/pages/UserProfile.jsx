@@ -85,7 +85,9 @@ function UserProfile() {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return 'No date';
-    const date = new Date(dateStr);
+    // Handle timezone - dates from DB are in YYYY-MM-DD format
+    // Add T00:00:00 to parse as local time, not UTC
+    const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 

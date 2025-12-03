@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userApi, friendsApi } from '../services/api';
 
@@ -7,6 +7,7 @@ function Friends() {
   const [activeTab, setActiveTab] = useState('friends');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [displayedResults, setDisplayedResults] = useState(3);
   const [searching, setSearching] = useState(false);
   const [friends, setFriends] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -14,6 +15,7 @@ function Friends() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const debounceRef = useRef(null);
 
   // Load friends and requests on mount
   useEffect(() => {
@@ -39,27 +41,39 @@ function Friends() {
     }
   };
 
-  // Search users
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (searchQuery.length < 2) {
-      setError('Search query must be at least 2 characters');
+  // Debounced search as user types
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setError('');
+
+    // Clear previous timeout
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (value.length < 2) {
+      setSearchResults([]);
+      setDisplayedResults(3);
       return;
     }
 
-    setSearching(true);
-    setError('');
-    try {
-      const res = await userApi.search(searchQuery);
-      setSearchResults(res.data);
-      if (res.data.length === 0) {
-        setError('No users found');
+    // Debounce search by 300ms
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const res = await userApi.search(value);
+        setSearchResults(res.data);
+        setDisplayedResults(3); // Reset to show top 3
+      } catch (err) {
+        console.error('Search error:', err);
+      } finally {
+        setSearching(false);
       }
-    } catch (err) {
-      setError(err.response?.data?.error || 'Search failed');
-    } finally {
-      setSearching(false);
-    }
+    }, 300);
+  };
+
+  // Show more results
+  const handleShowMore = () => {
+    setDisplayedResults(prev => prev + 5);
   };
 
   // Send friend request
@@ -71,9 +85,8 @@ function Friends() {
       // Refresh sent requests
       const sentRes = await friendsApi.getSentRequests();
       setSentRequests(sentRes.data);
-      // Clear search results
-      setSearchResults([]);
-      setSearchQuery('');
+      // Remove from search results
+      setSearchResults(prev => prev.filter(u => u.username !== username));
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to send request');
@@ -121,6 +134,9 @@ function Friends() {
     return 'none';
   };
 
+  const visibleResults = searchResults.slice(0, displayedResults);
+  const hasMoreResults = searchResults.length > displayedResults;
+
   return (
     <div className="Friends page">
       <div className="page-header">
@@ -137,61 +153,69 @@ function Friends() {
       {/* Search Section */}
       <div className="friends-search-section">
         <h2>Find Friends</h2>
-        <form onSubmit={handleSearch} className="search-form">
+        <div className="search-form">
           <input
             type="text"
-            placeholder="Search by username or name..."
+            placeholder="Start typing to search by username or name..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             className="search-input-large"
           />
-          <button type="submit" className="search-btn" disabled={searching}>
-            {searching ? 'Searching...' : '🔍 Search'}
-          </button>
-        </form>
+          {searching && <span className="search-spinner">🔄</span>}
+        </div>
 
-        {/* Search Results */}
-        {searchResults.length > 0 && (
+        {/* Search Results - Dynamic as you type */}
+        {searchQuery.length >= 2 && (
           <div className="search-results">
-            <h3>Search Results</h3>
-            <div className="user-list">
-              {searchResults.map(user => {
-                const status = getUserStatus(user.id);
-                return (
-                  <div key={user.id} className="user-card">
-                    <div className="user-avatar">
-                      {user.firstName.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="user-info">
-                      <span className="user-name">{user.firstName} {user.lastName}</span>
-                      <span className="user-username">@{user.username}</span>
-                    </div>
-                    <div className="user-actions">
-                      <button 
-                        className="view-profile-btn"
-                        onClick={() => navigate(`/user/${user.username}`)}
-                      >
-                        View Profile
-                      </button>
-                      {status === 'none' && (
-                        <button 
-                          className="add-friend-btn"
-                          onClick={() => handleSendRequest(user.username)}
-                        >
-                          + Add Friend
-                        </button>
-                      )}
-                      {status === 'pending_sent' && (
-                        <span className="status-badge pending">Request Sent</span>
-                      )}
-                      {status === 'friend' && (
-                        <span className="status-badge friends">✓ Friends</span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            {visibleResults.length === 0 && !searching ? (
+              <p className="no-results">No users found matching "{searchQuery}"</p>
+            ) : (
+              <>
+                <div className="user-list">
+                  {visibleResults.map(user => {
+                    const status = getUserStatus(user.id);
+                    return (
+                      <div key={user.id} className="user-card">
+                        <div className="user-avatar">
+                          {user.firstName.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="user-info">
+                          <span className="user-name">{user.firstName} {user.lastName}</span>
+                          <span className="user-username">@{user.username}</span>
+                        </div>
+                        <div className="user-actions">
+                          <button 
+                            className="view-profile-btn"
+                            onClick={() => navigate(`/user/${user.username}`)}
+                          >
+                            View Profile
+                          </button>
+                          {status === 'none' && (
+                            <button 
+                              className="add-friend-btn"
+                              onClick={() => handleSendRequest(user.username)}
+                            >
+                              + Add Friend
+                            </button>
+                          )}
+                          {status === 'pending_sent' && (
+                            <span className="status-badge pending">Request Sent</span>
+                          )}
+                          {status === 'friend' && (
+                            <span className="status-badge friends">✓ Friends</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {hasMoreResults && (
+                  <button className="show-more-btn" onClick={handleShowMore}>
+                    Show More ({searchResults.length - displayedResults} remaining)
+                  </button>
+                )}
+              </>
+            )}
           </div>
         )}
       </div>

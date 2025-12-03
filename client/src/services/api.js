@@ -46,6 +46,8 @@ api.interceptors.response.use(
 export const userApi = {
   search: (query) => api.get(`/users/search?q=${encodeURIComponent(query)}`),
   getProfile: (username) => api.get(`/users/profile/${username}`),
+  getMe: () => api.get('/users/me'),
+  updateProfile: (data) => api.patch('/users/me', data),
 };
 
 // ============ Friends API ============
