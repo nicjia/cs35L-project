@@ -107,3 +107,11 @@ npm run dev
 - Start server: `cd server && npm start`
 - Start client dev: `cd client && npm run dev`
 - Run DB schema: `mysql -u $DB_USER -p $DB_NAME < server/schema.sql`
+
+Sequence Diagram for "Add Task" Feature:
+
+<img width="756" height="792" alt="image" src="https://github.com/user-attachments/assets/9ab6086f-a015-4a60-a321-095952583bda" />
+
+
+
+
