@@ -87,7 +87,7 @@ export default function Register() {
         {error && <p className="auth-error-message">{error}</p>}
         
         <form onSubmit={handleSubmit} className="auth-form">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
             <div className="auth-form-group">
               <label className="auth-form-label" htmlFor="firstName">First Name</label>
               <input
