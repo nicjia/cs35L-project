@@ -95,15 +95,15 @@ export function AddTaskForm({ onSuccess }) {
           </select>
         </div>
         <div className="form-group">
-          <label className="task-public-label">
-            <input
-              type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
-              aria-label="Make task public"
-            />
-            <span>Make Public</span>
-          </label>
+          <label className="form-label">&nbsp;</label>
+          <button
+            type="button"
+            className={`visibility-toggle ${isPublic ? 'public' : 'private'}`}
+            onClick={() => setIsPublic(!isPublic)}
+            aria-label={isPublic ? 'Make private' : 'Make public'}
+          >
+            {isPublic ? '🌐 Public' : '🔒 Private'}
+          </button>
         </div>
         <button className="task-btn task-btn-primary" type="submit">
           Add Task
