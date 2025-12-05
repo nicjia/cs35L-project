@@ -1,0 +1,654 @@
+
+--- Prompt 1 (timestamp: 1763750574739) ---
+can you see my files
+
+--- Prompt 2 (timestamp: 1763750584653) ---
+@agent Enable: "Enable Claude Haiku 4.5 for all clients"
+
+--- Prompt 3 (timestamp: 1763750651316) ---
+okay from your understanding tell me how my current system works. take your time. i want you to have a full understanding of what connects to what, and how everything integrates together to create the final product. if you want to voice your thoughts so i can review them, feel free to do so.
+
+--- Prompt 4 (timestamp: 1763751074129) ---
+perfect gang. do we have individual users right now? and if so how is that defined? is it linked to ip access address?
+
+--- Prompt 5 (timestamp: 1763752561549) ---
+check the new files i just pulled
+
+Updating eab9b6c..ac2ba7b
+Fast-forward
+ server/config/config.js                                 |  15 ++-
+ server/index.js                                         |  34 +++---
+ server/middleware/auth.js                               |  19 +++
+ server/models/user.js                                   |  57 +++++++++
+ server/node_modules/.package-lock.json                  | 115 +++++++++++++++++-
+ .../node_modules/glob/dist/commonjs/has-magic.d.ts.map  |   2 +-
+ server/node_modules/glob/dist/commonjs/index.d.ts       |   4 +-
+ server/node_modules/glob/dist/esm/bin.mjs               | 146 +++++++++++++++++------
+ server/node_modules/glob/dist/esm/bin.mjs.map           |   2 +-
+ server/node_modules/glob/dist/esm/has-magic.d.ts.map    |   2 +-
+ server/node_modules/glob/dist/esm/index.d.ts            |   4 +-
+ server/node_modules/glob/package.json                   |   2 +-
+ server/package-lock.json                                | 117 +++++++++++++++++-
+ server/package.json                                     |   2 +
+ server/routes/auth.js                                   |  75 ++++++++++++
+ 15 files changed, 523 insertions(+), 73 deletions(-)
+ create mode 100644 server/middleware/auth.js
+ create mode 100644 server/models/user.js
+ create mode 100644 server/routes/auth.js
+
+--- Prompt 6 (timestamp: 1763772753651) ---
+do i currently store when the task was created
+
+--- Prompt 7 (timestamp: 1763772837050) ---
+okay based on the creation time, i want a feature to allow the "urgency" of the task to scale, ie if half of the time has elapsed since the creation of a task to the due date, the task should default move up one "rank". if it is already a thte highest "rank", nothing should happen
+
+--- Prompt 8 (timestamp: 1763773189679) ---
+can i also have it so that after 90% elapse time it ups again
+
+--- Prompt 9 (timestamp: 1763773218442) ---
+add a fourth urgency level just call it urgent
+
+--- Prompt 10 (timestamp: 1764656332045) ---
+read all the important files and get a clear understanding of how the app works
+
+--- Prompt 11 (timestamp: 1764656822029) ---
+okay first of all, point to where this is displayed. we need to fix it cuz 1. its not centered, 2. it looks different for dark and light mode probably. dont fix it yourself just yet, just point to where it is
+
+--- Prompt 12 (timestamp: 1764656995102) ---
+okay fix login.css
+
+--- Prompt 13 (timestamp: 1764657318607) ---
+brotha what the fuck is this
+
+--- Prompt 14 (timestamp: 1764657383096) ---
+yes thats a lot better. the login is now white, but its horribly off center.
+
+--- Prompt 15 (timestamp: 1764657554867) ---
+its still not centered
+
+--- Prompt 16 (timestamp: 1764657610229) ---
+now its all the way in the left? is there. abetter way to do this
+
+--- Prompt 17 (timestamp: 1764657700673) ---
+why did you need to change app.jsx
+
+--- Prompt 18 (timestamp: 1764657769390) ---
+dont do anything yet
+
+--- Prompt 19 (timestamp: 1764657792893) ---
+im running into a server error, can you find out why?
+
+--- Prompt 20 (timestamp: 1764657946403) ---
+how does jwt secret work? can it be any string
+
+--- Prompt 21 (timestamp: 1764658124192) ---
+it still throws an error. i already have jwt secret and im running the new server.
+
+Error during registration: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:9:26
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during registration: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:9:26
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during registration: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:9:26
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during registration: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:9:26
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during registration: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:9:26
+this is the terminakl
+
+--- Prompt 22 (timestamp: 1764658382362) ---
+i think its cuz i forgot to start my mysql server
+
+--- Prompt 23 (timestamp: 1764658431994) ---
+does mysql automatically start when i do npm start?
+
+--- Prompt 24 (timestamp: 1764658571215) ---
+this is what it says. its not the homebrew
+
+--- Prompt 25 (timestamp: 1764658783996) ---
++-------------------------+
+| Tables_in_cs35l_project |
++-------------------------+
+| Tasks                   |
+| users                   |
++-------------------------+
+nick@MacBook-Pro-4 cs35L-project % mysql -u root -p -D cs35l_project -e "DESCRIBE users;"
+Enter password: 
++---------------+--------------+------+-----+-------------------+-------------------+
+| Field         | Type         | Null | Key | Default           | Extra             |
++---------------+--------------+------+-----+-------------------+-------------------+
+| id            | int          | NO   | PRI | NULL              | auto_increment    |
+| username      | varchar(255) | NO   | UNI | NULL              |                   |
+| password_hash | varchar(255) | NO   |     | NULL              |                   |
+| created_at    | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++---------------+--------------+------+-----+-------------------+-------------------+
+nick@MacBook-Pro-4 cs35L-project % 
+
+nick@MacBook-Pro-4 cs35L-project % mysql -u root -p -D cs35l_project -e "SELECT id, firstName, lastName, username, email, createdAt, updatedAt FROM Users WHERE email = 'nicjia@ucla.edu' LIMIT 1;"
+Enter password: 
+ERROR 1054 (42S22) at line 1: Unknown column 'firstName' in 'field list'
+nick@MacBook-Pro-4 cs35L-project %
+
+--- Prompt 26 (timestamp: 1764658847144) ---
+okay why am i running into errors right now though? what is preventing me from creating an account
+
+--- Prompt 27 (timestamp: 1764659057769) ---
+okay stop before you do that. just understand, my group mates are working on the same code base. i want my server to match the code, not the other way around. i just recently pulled all the changes, so i want to make their changes work and do wahtever i need to do on my end ot make them work. i still need the code to work on their end
+
+--- Prompt 28 (timestamp: 1764659143904) ---
+Do Option A
+
+--- Prompt 29 (timestamp: 1764659334217) ---
+okay it worked perfectly. i was able to create my account
+
+--- Prompt 30 (timestamp: 1764660797353) ---
+oaky give me a list of all the features i have from a cs assignment submission project standpoint. i want a complete list of every challenge/feature we have.
+
+--- Prompt 31 (timestamp: 1764661762691) ---
+okay. lets name my project Slate. try to change the ui to look something like this. i want the general vibes of that isntead of being so plain. you do not need to implement any of the features that you see in that graphic, but i want that sort of theme and style in the dashboard, home, and in the sidebar. do you understand?
+
+--- Prompt 32 (timestamp: 1764661851392) ---
+i think a light pastel theme owuld be nice. either inter or poppins works. lets get that workin
+
+--- Prompt 33 (timestamp: 1764662228311) ---
+holy fuck this looks like hot ass. opus 4.5. do not change any implementation for now. change the styling of the website to try to match the 2nd image. their app has nice colors, round borders, a nice sidebar, with good pop up styles. you have one chance. let me know if you need me to import any components, or images. the profile should be a small circle in the top left that users should be able to click on. On the left, there should be a sidebar with a few items some with dropdown menus when you think they should have them. In the home page, there should be a ncie display showing the list of tasks. utilize rectangles with rounded borders. Have a nice welcome message in the home page like they have it. actually i lied you can add some implementations that are not tied to the backend data.
+
+--- Prompt 34 (timestamp: 1764662389583) ---
+@agent Enable: "Enable Claude Opus 4.5 (Preview) for all clients"
+
+--- Prompt 35 (timestamp: 1764663022667) ---
+@agent Continue: "Continue to iterate?"
+
+--- Prompt 36 (timestamp: 1764663167985) ---
+wow that looks good theres some missing features but i will implement them later. thank you!
+
+--- Prompt 37 (timestamp: 1764712827790) ---
+> server@1.0.0 start
+> nodemon index.js
+
+[nodemon] 3.1.10
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node index.js`
+[dotenv@17.2.3] injecting env (4) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Users' AND TABLE_SCHEMA = 'cs35l_project'
+Executing (default): SHOW INDEX FROM `Users` FROM `cs35l_project`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Tasks' AND TABLE_SCHEMA = 'cs35l_project'
+Executing (default): SHOW INDEX FROM `Tasks` FROM `cs35l_project`
+Server is running on http://localhost:3001
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during login: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:92:18 {
+  name: 'SequelizeDatabaseError',
+  parent: Error: Unknown column 'resetToken' in 'field list'
+      at Packet.asError (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packets/packet.js:740:17)
+      at Query.execute (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/commands/command.js:29:26)
+      at Connection.handlePacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:477:34)
+      at PacketParser.onPacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:93:12)
+      at PacketParser.executeStart (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packet_parser.js:75:16)
+      at Socket.<anonymous> (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:100:25)
+      at Socket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_BAD_FIELD_ERROR',
+    errno: 1054,
+    sqlState: '42S22',
+    sqlMessage: "Unknown column 'resetToken' in 'field list'",
+    sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+    parameters: undefined
+  },
+  original: Error: Unknown column 'resetToken' in 'field list'
+      at Packet.asError (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packets/packet.js:740:17)
+      at Query.execute (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/commands/command.js:29:26)
+      at Connection.handlePacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:477:34)
+      at PacketParser.onPacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:93:12)
+      at PacketParser.executeStart (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packet_parser.js:75:16)
+      at Socket.<anonymous> (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:100:25)
+      at Socket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_BAD_FIELD_ERROR',
+    errno: 1054,
+    sqlState: '42S22',
+    sqlMessage: "Unknown column 'resetToken' in 'field list'",
+    sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+    parameters: undefined
+  },
+  sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+  parameters: {}
+}
+Executing (default): SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';
+Error during login: Error
+    at Query.run (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/mysql/query.js:52:25)
+    at /Users/nick/cs35L-project/server/node_modules/sequelize/lib/sequelize.js:315:28
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async MySQLQueryInterface.select (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async User.findAll (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1140:21)
+    at async User.findOne (/Users/nick/cs35L-project/server/node_modules/sequelize/lib/model.js:1240:12)
+    at async /Users/nick/cs35L-project/server/routes/auth.js:92:18 {
+  name: 'SequelizeDatabaseError',
+  parent: Error: Unknown column 'resetToken' in 'field list'
+      at Packet.asError (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packets/packet.js:740:17)
+      at Query.execute (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/commands/command.js:29:26)
+      at Connection.handlePacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:477:34)
+      at PacketParser.onPacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:93:12)
+      at PacketParser.executeStart (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packet_parser.js:75:16)
+      at Socket.<anonymous> (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:100:25)
+      at Socket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_BAD_FIELD_ERROR',
+    errno: 1054,
+    sqlState: '42S22',
+    sqlMessage: "Unknown column 'resetToken' in 'field list'",
+    sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+    parameters: undefined
+  },
+  original: Error: Unknown column 'resetToken' in 'field list'
+      at Packet.asError (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packets/packet.js:740:17)
+      at Query.execute (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/commands/command.js:29:26)
+      at Connection.handlePacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:477:34)
+      at PacketParser.onPacket (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:93:12)
+      at PacketParser.executeStart (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/packet_parser.js:75:16)
+      at Socket.<anonymous> (/Users/nick/cs35L-project/server/node_modules/mysql2/lib/base/connection.js:100:25)
+      at Socket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_BAD_FIELD_ERROR',
+    errno: 1054,
+    sqlState: '42S22',
+    sqlMessage: "Unknown column 'resetToken' in 'field list'",
+    sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+    parameters: undefined
+  },
+  sql: "SELECT `id`, `firstName`, `lastName`, `username`, `email`, `password`, `resetToken`, `resetTokenExpiry`, `createdAt`, `updatedAt` FROM `Users` AS `User` WHERE `User`.`email` = 'nicjia@ucla.edu';",
+  parameters: {}
+}
+
+
+why is sign in not working
+
+--- Prompt 38 (timestamp: 1764712957964) ---
+do option 1. will i have to implement this fix every time i start the server or only a one time fix
+
+--- Prompt 39 (timestamp: 1764718491999) ---
+nope it worked great.
+
+--- Prompt 40 (timestamp: 1764718748702) ---
+can you change the login page to match the theme of the actual app? right now its a weird purple screen. use light pastel colors if possible. The background is purple as well as the sign in button. try to have it be a lighter softer color. on top of that, replace your current logo that we have with the one i just sent
+
+--- Prompt 41 (timestamp: 1764719041733) ---
+1. i need to add an option for someone to change the task to private/public after its creation
+1.1. make the edit task section look clearner and not using the default html buttons
+
+2. profile page?
+2.1 finish the user settings, right now it doesnt have changable elements or display the right information, things like theme, notifications on or off, language, version, last name ,email display
+
+3. friends?
+3.1 way to bump public tasks for friends
+
+4. Projects, tasks dropdown menu different options need to have actual results when clicked
+5. home is missing some either stats or connectable stuff, right now just a bunch of random empty stuff
+6. notification bell
+7. no overdue tasks right now, and no implementation of work tasks, personal goals, study plan, overall home page lacking interactability and button connections. today, upcoming, compelted percent, high priority, pending tasks, not necessarily are due today, no projects interaction, possibly remove. 
+
+
+what do you want to start with
+
+--- Prompt 42 (timestamp: 1764719579648) ---
+so whicih item are you trying to do first
+
+--- Prompt 43 (timestamp: 1764719744544) ---
+okay you may begin with the list of todo items.
+1. i need to add an option for someone to change the task to private/public after its creation
+1.1. make the edit task section look clearner and not using the default html buttons
+
+2. profile page?
+2.1 finish the user settings, right now it doesnt have changable elements or display the right information, things like theme, notifications on or off, language, version, last name ,email display
+
+3. friends?
+3.1 way to bump public tasks for friends
+
+4. Projects, tasks dropdown menu different options need to have actual results when clicked
+5. home is missing some either stats or connectable stuff, right now just a bunch of random empty stuff
+6. notification bell
+7. no overdue tasks right now, and no implementation of work tasks, personal goals, study plan, overall home page lacking interactability and button connections. today, upcoming, compelted percent, high priority, pending tasks, not necessarily are due today, no projects interaction, possibly remove. 
+
+
+to remind you, these are just some of the items missing in the current implementation of the frontend. the ui looks beautiful, but the main issue is that it is lacking connections between buttons and their actions. try your best to connect these buttons to their respective pages / what they should do, and ask me if you ever get confused or are stuck. if there are new items that require backend implementation in order to continue with them, do not change it, pause, and give me a list of these things that need backend changes at the end of your reply. that way, i can properly talk to the backend engineers to see what things we need to implement in order to have your features. it may be the case that we do not want these features in our final product, and that our backend is already complete as is
+
+--- Prompt 44 (timestamp: 1764720130572) ---
+@agent Continue: "Continue to iterate?"
+
+--- Prompt 45 (timestamp: 1764720804684) ---
+Okay that was great. One thing i noticed, the noification button stops in the middle and covers up the on when you turn it on. Also remove the language section, and also when i turn the theme to dark, nothing changes. Implement these changes, as well as a notifications table, friends, bumping tasks. again, if there are things you need to change outside of these, ask in the chat before implementing them. on top of that, just confirm everything you fixed/changed
+
+--- Prompt 46 (timestamp: 1764721281789) ---
+okay so now my table by default has notifications, and friends, and i can bump tasks right? the bump is not a table is it? it should just be a feature that i can bump a friends tasks. also give each user a way to search for other users
+
+--- Prompt 47 (timestamp: 1764721561749) ---
+okay so now my table by default has notifications, and friends, and i can bump tasks right? the bump is not a table is it? it should just be a feature that i can bump a friends tasks. make this change. also, give me a way to search for other users by their username. this way, i can search for other users and send friend requests. when i view another user i should be able to see their private tasks, but i should not be able to bump these tasks and give them a notification unless im friends with them. give me an ability to send a friend request on the page, and when they sign in to their account, they should receieve a notification with my friend request sent where they can accept it to be friends. there are a lot of components to this request, so i will break it down the best i can.
+
+1. be able to search for another user
+2. be able to view that other users profile with certain public displays on their profile that others can see
+3. send a friend request
+4. accept friend requests
+5. send them a notification for a public task
+
+--- Prompt 48 (timestamp: 1764722832127) ---
+okay great work. just several things.
+
+1. the notifications in the top still has the hard coded ones. change that to either remove the default ones, or add the actual tasks one when they come
+2. when i get a friend request, you should put it in the notifications dropdown as well, and they should be able to either accept or deny it there, or if they click on it, it should bring them to the actual notifications page.
+3. is it possible to have it dynamically show profiles as i type? so for example if i type something and wait like 0.3s, there can be like the top 3 results displayed with a more button on the buttom if there are more results? this more closely mimics how search works on our world, with results dynamically popping up once you stop typing. 
+4. the search bar at the top does not really work. not sure if we want it at the moment but either implement a working search at the sidebar with similar search mechanics as i just mentioned, or remove it entirely.
+5. try to see if you can display the last name and email in both sections, and see if you can allow the user to change both those files.
+6. check to make sure duplicate emails cannot make more than one account. 
+7. not sure if the bumping actually works on the other users side. when my friend bumps my task, nothing happens on my page. there are multiple things you can do, either have a notification bell ding on the top, or have a physical notification flag appear on the side of their screen, as if they got like a regular notification on mac or however google does it. that would be good. or, you can implement so that if someone has notifications on, every notification they get in the dropdown also gives like a banner notification, and if they dont, it ust goes to their notification dropdown. does this all make sense?
+
+again, like before, ask me before doing any changes that might affect the backend or need the backend to change
+
+--- Prompt 49 (timestamp: 1764722993340) ---
+1. yes implement a working search that just searches pages around. like if i input users, it should direct me to the friend page where i can search it, just simple stuff like that the search doesnt need to be too smart or whatever
+2. the banner notifications should be the ones that pop up outside the browser if psosible. if not, it can just be the ones that persist until clicks within the browser.
+3. yes that would be great users should need to enter their current password to change their email, and if they want to change their password they should have to enter their current password first
+4. the more should just expand the dropdown to show more results. if there are none left, the more button can just vanish
+
+--- Prompt 50 (timestamp: 1764723019074) ---
+yes go ahead and do that.
+
+--- Prompt 51 (timestamp: 1764723822090) ---
+that was great. really good job.
+1. does looking at view all activity in notifications by default go to the friends page? if so, either add another page displaying notifications, or remove that interaction. 
+2. lets change the box button to mark a task as done. some people might mistake it as a select option. change that button to a mark as done. 
+3. change the search bar on the side to say Search pages and not users since you cant search users from there
+4. big error somewhere. there is a discrepancy in my friend viewing my profile, and my actual profile. when my friend views my profile, the tasks show a task date a day before my actual task is due on my screen. for example, my task shows dec 1, but my frinds screen shows nov 30 as the due date. resolve this issue.
+
+--- Prompt 52 (timestamp: 1764724282908) ---
+good work. unforuntely, the tasks still have this sort of look. when i hover over the task, can you have a green check mark instead of just highlighting green. 
+
+also, verify which conditions our app currently satisfies
+
+Your app should:
+
+Display dynamic data to the user. That is, some part of the webpage changes based on data received from the server.
+Upload data from the client to the back-end, which saves the data to the server in a database. The server should guarantee ACID propertiesLinks to an external site. when storing the data.
+Meaningfully search through server-side data.
+Examples of meaningful search include searching for certain file names, data content, upload dates, etc.
+These files could be ones that the user has uploaded, or could be ones that you have placed in the server directory yourself. For example, if you were making an informational app for prospective dog owners you might have a single file containing information about various dog breeds.
+The front-end must let the user enter a query conveniently.
+Address security issues. For example, at least part of your application should require the user to authenticateLinks to an external site..
+Execute a significant amount of code, written by your team, on both client and server. For example, do not rely on FirebaseLinks to an external site. to do all your server-side work.
+In addition to the above functionality requirements, your web app should contain at least three more distinct features.
+
+--- Prompt 53 (timestamp: 1764724463138) ---
+are there any features im missing
+
+--- Prompt 54 (timestamp: 1764724762914) ---
+okay actually i know what to do.
+
+1. try again with the gogole chrome level notification banners. that would be really cool
+2. you can add the db unique constraint to prevent race conditions
+3. nothing else from that list is super important
+4. implement the project feature
+4.1 users should easily be able to create tasks in the project itself, either by clicking on the project and creating a task there, or creating a general task and dragging and dropping it into the corresponding project. they should also be able to move tasks outside projects, into different projects, and have typical task integration within these projects.
+
+--- Prompt 55 (timestamp: 1764724855927) ---
+@agent Try Again
+
+--- Prompt 56 (timestamp: 1764725291257) ---
+@agent Continue: "Continue to iterate?"
+
+--- Prompt 57 (timestamp: 1764725745399) ---
+okay wow pause. when i create tasks in the project sections, they should appear in all tasks, and when icreate oe in he project, i should be able to set a due date and everything like a regular task. this is not the case. also even once i drag it out into the general tasks, it doesnt appear in the general tasks. fix this. you have also messed up something in the task creation. the calendar that pops up when i click the date doesnt appear, and the public private button is gone. now the tasks button shows green check by default. even though it highlights green after i hover ove rit, this is wrong. fix all of these errors
+
+--- Prompt 58 (timestamp: 1764725986568) ---
+@agent Continue: "Continue to iterate?"
+
+--- Prompt 59 (timestamp: 1764728946110) ---
+@agent Try Again
+
+--- Prompt 60 (timestamp: 1764729280603) ---
+okay not bad just really quck why is this text white. im on light mode. this should be a really quick fix
+
+--- Prompt 61 (timestamp: 1764729530204) ---
+@agent Continue: "Continue to iterate?"
+
+--- Prompt 62 (timestamp: 1764729844344) ---
+how did it change from the last change you made? why is the text still white? i already did cmd shift r and it doesnt work.
+
+--- Prompt 63 (timestamp: 1764730246281) ---
+in the all tasks, can you sort it and put all the newest,uncompleted tasks on the top. and all the completed ones on the bottom? also, for the list of tasks, do today, active, overdue, then upcoming and yadadada. for active tasks, sort them by date due, with overdue tasks on the top with a light red highlight instead of a white background.
+
+--- Prompt 64 (timestamp: 1764730492107) ---
+i like this color. make it so that the default is this color, and when you hover over it, it gets even more red. for these bars, can you follow the order i said. active, today, overdue, then everything else follows in whatever order you think is best
+
+--- Prompt 65 (timestamp: 1764730937336) ---
+when i click the public button under the task that is in a project, it turns to private. but the tag that says what project it is in disappears. fix this issue
+
+--- Prompt 66 (timestamp: 1764731263215) ---
+okay anotehr bug. 1. not all the tasks are in there. 2. the project is not there?? 
+
+1. when i come here, there should be a short search where i can look through tasks and find them to drag into their respective projects. This will be useful as the user can add different tasks to projects even if they created them outside the proejct at first
+2. the project is not there and i cant see it at all
+
+--- Prompt 67 (timestamp: 1764731751933) ---
+good! just one issue though, the project is not showing up here
+
+--- Prompt 68 (timestamp: 1764732144459) ---
+i think it works diddyblud
+
+--- Prompt 69 (timestamp: 1764732771075) ---
+give me a list of things 
+Since you will submit your repository, it should also contain a README file (plaintext or MarkdownLinks to an external site.) describing in detail how someone who cloned it can run your app. This should, of course, include any shell commands needed for setup.
+
+--- Prompt 70 (timestamp: 1764732901804) ---
+sned it here
+
+--- Prompt 71 (timestamp: 1764733178035) ---
+I just wanted to clarify the minimum requirements for the project system:
+
+You app can display dynamic data to the user.
+Your app can upload data from the client to the back-end
+Address security issues. For example, at least part of your application should require the user to authenticate
+User can meaningfully search through server data.
+Three more distinct features. Some points will be given according to how creative and useful the features are.
+Meaningful understanding of Git is exemplified through version control.
+A detailed README file that accurately and completely describes how to run the app locally.
+The Project is generally visually pleasing and easy to navigate.
+The code of your system is written with readability in mind (e.g., identifier have meaningful names, the code is well-structured and follows best practices, ...)
+Execute a significant amount of code, written by your team, on both client and server.
+You rationally consider alternative choices for your design decisions and you justify why the choices are made accordingly.
+
+do i satisfy these
+
+--- Prompt 72 (timestamp: 1764747343316) ---
+read the class entity relationships and give me a text that i could give to an entity relationship diagram coder to spit me out an image.
+
+1. find an online erd diagram drawer that accepts some sort of code/text when generating the erd
+2. read the files i have here that state classes and the relationship
+3. write the code that i can paste into that specific diagram drawer
+
+--- Prompt 73 (timestamp: 1764747353593) ---
+@agent Enable: "Enable Gemini 3 Pro (Preview) for all clients"
+
+--- Prompt 74 (timestamp: 1764747365704) ---
+@agent Try Again
+
+--- Prompt 75 (timestamp: 1764747392327) ---
+read the class entity relationships and give me a text that i could give to an entity relationship diagram coder to spit me out an image.
+
+1. find an online erd diagram drawer that accepts some sort of code/text when generating the erd
+2. read the files i have here that state classes and the relationship
+3. write the code that i can paste into that specific diagram drawer
+
+--- Prompt 76 (timestamp: 1764747478737) ---
+I need you to generate a text-based description of an Entity-Relationship Diagram (ERD) based on the provided C++ code. The output should be code/text that can be pasted directly into an online ERD diagram drawing tool, such as PlantUML or Mermaid, to render the diagram automatically.
+
+Instructions:
+Analyze the Code: Read the C++ class definitions I will provide below.
+
+Identify Entities and Relationships: Determine the main Entities (classes), their Attributes (member variables), and the Relationships (associations/dependencies) between them. Pay close attention to member variables that are pointers or references to other defined classes, as these usually indicate relationships.
+
+Generate ERD Text/Code: Write the code/text for the diagram in the format suitable for a tool like PlantUML (preferred) or Mermaid.
+
+Please start your response with the generated code block so I can copy/paste it easily.
+
+--- Prompt 77 (timestamp: 1764747486588) ---
+I need you to generate a text-based description of an Entity-Relationship Diagram (ERD) based on the provided C++ code. The output should be code/text that can be pasted directly into an online ERD diagram drawing tool, such as PlantUML or Mermaid, to render the diagram automatically.
+
+Instructions:
+Analyze the Code: Read the C++ class definitions I will provide below.
+
+Identify Entities and Relationships: Determine the main Entities (classes), their Attributes (member variables), and the Relationships (associations/dependencies) between them. Pay close attention to member variables that are pointers or references to other defined classes, as these usually indicate relationships.
+
+Generate ERD Text/Code: Write the code/text for the diagram in the format suitable for a tool like PlantUML (preferred) or Mermaid.
+
+Please start your response with the generated code block so I can copy/paste it easily.
+
+--- Prompt 78 (timestamp: 1764748775667) ---
+I can certainly help you draft a clear summary.
+
+Here is a concise summary of the issue and context that you can provide to an IDE LLM:
+
+***
+
+## Summary of the Development Issue
+
+"I am running a full-stack application that uses a **MySQL local database**. I start the application using:
+1.  `npm start` in the server (backend) folder.
+2.  `npm run dev` in the client (frontend) folder.
+
+My collaborator encountered an issue where the server failed to start correctly, reporting a **'network error'** and **'failing to load resource'** in the console.
+
+The core confusion was whether the **MySQL database server needed to be started manually** (e.g., using a command like `mysql.server start`) or if it was started automatically by my `npm start` script. My collaborator was expecting a manual step, which suggests the network error was the **server failing to connect to the database** because the database service was not running or accessible.
+
+**The goal is to resolve the 'network error'** by ensuring the backend server successfully connects to the MySQL database upon startup, and to clarify the correct procedure for initializing the database service."
+
+--- Prompt 79 (timestamp: 1764748884611) ---
+My collaborator encountered an issue where the server failed to start correctly, reporting a 'network error' and 'failing to load resource' in the console.
+
+The core confusion was whether the MySQL database server needed to be started manually (e.g., using a command like mysql.server start) or if it was started automatically by my npm start script. My collaborator was expecting a manual step, which suggests the network error was the server failing to connect to the database because the database service was not running or accessible.
+
+The goal is to resolve the 'network error' by ensuring the backend server successfully connects to the MySQL database upon startup, and to clarify the correct procedure for initializing the database service
+
+
+This is the project i need you to help with. why is their setup failing but mine works fine?
+
+--- Prompt 80 (timestamp: 1764795761902) ---
+Discuss some design decisions (2 or more) you've made and alternatives you've considered to show us your design skills. Include at least one diagram to explain the alternatives clearly
+
+Each design decision discuss at least two different options (20 pts)
+Each design decision is described clearly (30 pts)
+The included diagram is understandable, uses correct notation, and supports your argument (30 pts)
+The decision is justified clearly with an argument that applies to the particular context and is based on the description / diagram of the discussed design options (20 pts)  
+
+For this project, give me a small list of design decisions that we couldve taken to change the layout of the project
+
+--- Prompt 81 (timestamp: 1764796082065) ---
+Comparison:
+
+Client-side:
+Pros: Fast interactive filtering after initial fetch; easy to implement.
+Cons: Not scalable for many tasks (large memory), initial fetch cost; exposes all user tasks to client (privacy/perf).
+Server-side:
+Pros: Scales well, allows DB-level indexing/full-text search, supports pagination and access control.
+Cons: More API endpoints, slightly more latency per query.
+Recommendation:
+
+Implement server-side search for production readiness (GET /api/tasks?search=) and keep a small client-side debounce UI to call it. For now (course project), client-side is acceptable if user data size stays small, but add server-side endpoint before submission to satisfy scalability/security expectations.
+
+how does our current thing work?
+
+--- Prompt 82 (timestamp: 1764796197916) ---
+how large of a task list can a user have before it breaks the browser
+
+--- Prompt 83 (timestamp: 1764796334516) ---
+then i dont have this as a feature then right
+
+Meaningfully search through server-side data.
+Examples of meaningful search include searching for certain file names, data content, upload dates, etc.
+These files could be ones that the user has uploaded, or could be ones that you have placed in the server directory yourself. For example, if you were making an informational app for prospective dog owners you might have a single file containing information about various dog breeds.
+The front-end must let the user enter a query conveniently.
+
+
+--- Prompt 84 (timestamp: 1764796694746) ---
+Meaningfully search through server-side data.
+Examples of meaningful search include searching for certain file names, data content, upload dates, etc.
+These files could be ones that the user has uploaded, or could be ones that you have placed in the server directory yourself. For example, if you were making an informational app for prospective dog owners you might have a single file containing information about various dog breeds.
+The front-end must let the user enter a query conveniently.
+
+I do not have this at the moment. can i change it so that when the user searches for other users, it does a meaningful server search? Would this count? Do not implement this yet. i need to plan this out before you start
+
+--- Prompt 85 (timestamp: 1764797256536) ---
+okay. implement a useful meaningful server side search for users
+
+1. when the user searches for users in friends, it is a direct server search. you can implement some sort of fuzzy search, search by name, email, or whatever. try to do this step first and let me look through the algorithms and everything before you proceed. 
+2. can you confirm if notifications are a local storage thing or a unique to user thing.
+
+--- Prompt 86 (timestamp: 1764797639755) ---
+okay pause. 1. not the notifications sorry the notification setting. 
+
+2. yeah go ahead and implement the fuzzy search. you do not need to make it super complicated though. make it very basic and try not to change too much code. let me review it
+
+--- Prompt 87 (timestamp: 1764798257616) ---
+so when i search nick, first name matches since the levenshtein distance isnt far? why when i search nick, the firstName nicholas strikes as a match
+
+--- Prompt 88 (timestamp: 1764798393235) ---
+Example Response
+If you search for "nick":
+
+
+
+[
+  { "id": 1, "firstName": "Nick", "lastName": "Jia", "username": "nick", "score": 450, "matchedFields": ["username", "firstName"] },
+  { "id": 5, "firstName": "Nicholas", "lastName": "Smith", "username": "nsmith", "score": 150, "matchedFields": ["firstName"] }
+]
+
+why does nick match for firstname nicholas
+
