@@ -1,3 +1,4 @@
+//Implemented with autofill help from GitHub Copilot--Amadeu
 const { test, expect } = require("@playwright/test");
 
 test("User can register and then log in", async ({ page }) => {

@@ -3,13 +3,15 @@ const { User } = require("../models");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { sendPasswordResetEmail } = require("../utils/emailService");
+const { logError, getErrorResponse } = require("../utils/logger");
+const { generateToken } = require("../utils/jwtHelper");
 
 router.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, username, email, password } = req.body;
 
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
+    const existingEmail = await User.findOne({ where: { email } });
+    if (existingEmail) {
       return res.status(400).json({ message: "Email already in use" });
     }
 
@@ -26,22 +28,7 @@ router.post("/register", async (req, res) => {
       password,
     });
 
-    // Ensure JWT secret exists
-    if (!process.env.JWT_SECRET) {
-      console.error('JWT_SECRET is not set in environment variables');
-      return res.status(500).json({ message: 'Server configuration error' });
-    }
-
-    // Generate JWT token for immediate login
-    const token = jwt.sign(
-      {
-        userId: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = generateToken(newUser);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -53,35 +40,10 @@ router.post("/register", async (req, res) => {
       },
     });
   } catch (error) {
-    // Log full error for debugging (include nested Sequelize properties)
-    console.error('Error during registration:');
-    try {
-      // Print message and stack if available
-      console.error('message:', error.message);
-      console.error('stack:', error.stack);
-      // Sequelize stores original DB error on `error.original` or `error.parent`
-      if (error.original) console.error('original:', error.original);
-      if (error.parent) console.error('parent:', error.parent);
-      // Print a serialized version of the error object to capture any extra fields
-      console.error('error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
-    } catch (logErr) {
-      console.error('Failed to stringify error:', logErr);
-      console.error(error);
-    }
+    logError(error, "Auth Registration Error");
 
-    // Handle common Sequelize errors with more useful messages
-    if (error.name === 'SequelizeValidationError') {
-      const messages = error.errors.map((err) => err.message);
-      return res.status(400).json({ errors: messages });
-    }
-
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      const messages = error.errors.map((err) => err.message);
-      return res.status(400).json({ errors: messages });
-    }
-
-    // Generic fallback
-    res.status(500).json({ message: 'Server error' });
+    const { status, json } = getErrorResponse(error);
+    res.status(status).json(json);
   }
 });
 
@@ -135,13 +97,15 @@ router.post("/forgot-password", async (req, res) => {
     // Always return success to prevent email enumeration attacks
     if (!user) {
       return res.json({
-        message: "Password reset link has been sent"
+        message: "Password reset link has been sent",
       });
     }
 
     // Generate secure reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenExpiry = new Date(Date.now() + parseInt(process.env.RESET_TOKEN_EXPIRY));
+    const resetTokenExpiry = new Date(
+      Date.now() + parseInt(process.env.RESET_TOKEN_EXPIRY)
+    );
 
     // Save token to database
     user.resetToken = resetToken;
@@ -157,7 +121,7 @@ router.post("/forgot-password", async (req, res) => {
     }
 
     res.json({
-      message: "Password reset link has been sent"
+      message: "Password reset link has been sent",
     });
   } catch (error) {
     console.error("Error in forgot-password:", error);
@@ -171,7 +135,7 @@ router.get("/verify-reset-token/:token", async (req, res) => {
     const { token } = req.params;
 
     const user = await User.unscoped().findOne({
-      where: { resetToken: token }
+      where: { resetToken: token },
     });
 
     if (!user) {
@@ -196,21 +160,27 @@ router.post("/reset-password", async (req, res) => {
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) {
-      return res.status(400).json({ message: "Token and new password are required" });
+      return res
+        .status(400)
+        .json({ message: "Token and new password are required" });
     }
 
     // Validate password length
     if (newPassword.length < 8) {
-      return res.status(400).json({ message: "Password must be at least 8 characters" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 8 characters" });
     }
 
     // Find user with valid token
     const user = await User.unscoped().findOne({
-      where: { resetToken: token }
+      where: { resetToken: token },
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired reset token" });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset token" });
     }
 
     // Check if token has expired
@@ -229,7 +199,7 @@ router.post("/reset-password", async (req, res) => {
     console.error("Error in reset-password:", error);
 
     // Handle validation errors
-    if (error.name === 'SequelizeValidationError') {
+    if (error.name === "SequelizeValidationError") {
       const messages = error.errors.map((err) => err.message);
       return res.status(400).json({ errors: messages });
     }

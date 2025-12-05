@@ -1,4 +1,5 @@
-
+//Amadeu Help from Gemini 3.0 prompt to create user model and hash password
+//Prompt: Help me create a Sequalize user model for user authentiction and hash the password before saving it to the database using bcryptjs and other best practices for security.
 
 const bcrypt = require("bcryptjs");
 
@@ -60,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
   // Hash password before saving (for new users and password updates)
   User.beforeSave(async (user) => {
     // Only hash if password was changed
-    if (user.changed('password')) {
+    if (user.changed("password")) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(user.password, salt);
     }
